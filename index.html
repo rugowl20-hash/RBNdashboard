@@ -1,0 +1,3840 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RUGS BY NATURE DASH BOARD</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome 6.4.0 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brandPrimary: '#1a5276',
+            brandPrimaryLight: '#2e86c1',
+            brandSuccess: '#27ae60',
+            brandWarning: '#f39c12',
+            brandDanger: '#e74c3c',
+            brandInfo: '#2980b9'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --primary: #1a5276;
+      --primary-light: #2e86c1;
+      --success: #27ae60;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+      --info: #2980b9;
+      --shadow-color: rgba(0, 0, 0, 0.08);
+      --bg: #f0f2f5;
+      --card: #ffffff;
+      --border: #d5d8dc;
+      --text: #2c3e50;
+      --text-light: #5d6d7e;
+      --input-bg: #ffffff;
+      --table-hover: #f8f9f9;
+      --header-bg: #ffffff;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --text-light: #94a3b8;
+      --input-bg: #0f172a;
+      --table-hover: #334155;
+      --header-bg: #1e293b;
+      --shadow-color: rgba(0, 0, 0, 0.25);
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      font-size: 13px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    /* CUSTOM CSS CHECKBOX STYLING TO AVOID BROWSER RENDERING GAPS */
+    input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      background-color: var(--input-bg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+    input[type="checkbox"]:hover {
+      border-color: var(--primary-light);
+    }
+    input[type="checkbox"]:checked {
+      background-color: #6366f1; /* Indigo-500 standard color match */
+      border-color: #6366f1;
+    }
+    input[type="checkbox"]:checked::after {
+      content: "\f00c"; /* FontAwesome check symbol */
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      color: white;
+      font-size: 9px;
+    }
+
+    .card {
+      background-color: var(--card);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 6px -1px var(--shadow-color);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px -3px var(--shadow-color);
+    }
+
+    .table-container {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background-color: var(--card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    th {
+      background-color: rgba(0, 0, 0, 0.04);
+      color: var(--text);
+      font-weight: 700;
+      padding: 10px 12px;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      white-space: nowrap;
+    }
+    tr:hover {
+      background-color: var(--table-hover);
+    }
+
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .kanban-col {
+      background-color: rgba(0, 0, 0, 0.02);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+    }
+
+    .img-thumbnail {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      transition: transform 0.2s ease;
+    }
+    .img-thumbnail:hover {
+      transform: scale(1.8);
+      z-index: 50;
+    }
+
+    .side-panel {
+      position: fixed;
+      top: 0;
+      right: -320px;
+      width: 320px;
+      height: 100%;
+      background-color: var(--card);
+      box-shadow: -4px 0 15px rgba(0, 0, 0, 0.15);
+      z-index: 100;
+      transition: right 0.3s ease-out;
+      border-left: 1px solid var(--border);
+    }
+    .side-panel.open {
+      right: 0;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(2px);
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .spreadsheet-input {
+      background-color: var(--input-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 4px 6px;
+      border-radius: 4px;
+      width: 100%;
+    }
+    .spreadsheet-input:focus {
+      border-color: var(--primary-light);
+      outline: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- TOAST PORTAL -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- APPLICATION CONTAINER (LOADS INITIALLY TO PREVENT AUTODETECT PHISHING GATES) -->
+  <div id="appContainer" class="flex flex-col min-h-screen">
+    
+    <!-- STICKY TOP BAR -->
+    <header class="sticky top-0 z-40 flex items-center justify-between px-6 py-3 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
+      <div class="flex items-center gap-3">
+        <div class="bg-indigo-600 text-white p-2 rounded-lg"><i class="fa-solid fa-seedling"></i></div>
+        <span class="text-lg font-extrabold tracking-tight text-slate-800 dark:text-white uppercase">Rugs By Nature Dash Board</span>
+        <span class="ml-2 text-[10px] bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wide border border-amber-200 dark:border-amber-700 hidden sm:inline">Prototype Sandbox Simulator</span>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <span id="systemDate" class="text-sm font-medium text-slate-500 dark:text-slate-400 hidden lg:inline">Checking simulation clock...</span>
+        
+        <!-- INTERACTIVE PERSONA SIMULATOR SWAPPER -->
+        <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-700/50 px-3 py-1.5 rounded-lg border border-slate-200/50 dark:border-slate-600">
+          <label for="personaSwapper" class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Simulated User:</label>
+          <select id="personaSwapper" onchange="swapActiveSimulatedPersona(this.value)" class="bg-transparent text-xs font-bold text-slate-700 dark:text-slate-300 focus:outline-none cursor-pointer">
+            <option value="Admin">System Administrator (Admin)</option>
+            <option value="Suraj">Suraj (Operations)</option>
+            <option value="Shivam">Shivam (Customer Support)</option>
+            <option value="Sushant">Sushant (Inventory Manager)</option>
+            <option value="Mona">Mona (Marketing)</option>
+            <option value="Aditya">Aditya (Sales)</option>
+            <option value="Vineeta">Vineeta (Operations)</option>
+          </select>
+        </div>
+
+        <button onclick="toggleDarkMode()" class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition" title="Toggle Theme">
+          <i id="themeIcon" class="fa-solid fa-moon"></i>
+        </button>
+
+        <button onclick="toggleFilterPanel(true)" class="flex items-center gap-1.5 px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition shadow-sm">
+          <i class="fa-solid fa-filter"></i> Filters
+        </button>
+      </div>
+    </header>
+
+    <!-- NAVIGATION BAR -->
+    <div class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 overflow-x-auto shadow-sm sticky top-[53px] z-30">
+      <ul class="flex px-4 list-none" id="tabsNavBar">
+        <!-- Dynamically rendered simulated tabs go here -->
+      </ul>
+    </div>
+
+    <!-- MAIN SHEETS LAYOUT -->
+    <main class="flex-1 p-6 max-w-[1600px] w-full mx-auto">
+      
+      <!-- 1. DASHBOARD VIEW -->
+      <div id="tab-dashboard" class="tab-content hidden">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-6" id="dashboardKpis">
+          <!-- Dynamically populated KPI cards -->
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="card p-5 lg:col-span-2">
+            <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+              <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-chart-bar text-indigo-500 mr-2"></i>Brand Performance Segment Matrix</h3>
+            </div>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Brand Label</th>
+                    <th>Orders Count</th>
+                    <th>Units Sold</th>
+                    <th>Revenue (USD)</th>
+                    <th>Active Returns</th>
+                    <th>Market Share Progress</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboardBrandTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card p-5">
+            <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+              <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-triangle-exclamation text-rose-500 mr-2"></i>Critical Stock Alerts</h3>
+              <span class="text-xs bg-rose-100 text-rose-800 px-2 py-0.5 rounded font-semibold">&le; 5 units</span>
+            </div>
+            <div class="table-container max-h-[260px] overflow-y-auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>SKU ID</th>
+                    <th>Design</th>
+                    <th>Stock Left</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboardAlertsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. ORDERS VIEW -->
+      <div id="tab-orders" class="tab-content hidden">
+        <div class="card p-5">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-cart-shopping text-indigo-500 mr-2"></i>Orders Register</h3>
+            <div class="flex gap-2">
+              <button onclick="bulkDeleteSelectedOrders()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-lg transition" id="bulkDeleteBtn" style="display:none;">
+                <i class="fa-solid fa-trash mr-1"></i> Delete Selected
+              </button>
+              <button onclick="openAddOrderModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition"><i class="fa-solid fa-plus mr-1"></i> New Order</button>
+              <button onclick="openTabularBulkOrderModal()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition"><i class="fa-solid fa-table mr-1"></i> Bulk Add</button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 40px;" class="text-center">
+                    <input type="checkbox" id="selectAllOrders" onchange="toggleSelectAllOrders(this)">
+                  </th>
+                  <th>Date</th>
+                  <th>Brand</th>
+                  <th>Marketplace</th>
+                  <th>Design Name</th>
+                  <th>Size</th>
+                  <th>SKU</th>
+                  <th>Qty</th>
+                  <th>Sales (USD)</th>
+                  <th>Status</th>
+                  <th>Logistics / Tracking</th>
+                  <th>Remarks Notes</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. RETURNS VIEW -->
+      <div id="tab-returns" class="tab-content hidden">
+        <div class="card p-5">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-rotate-left text-indigo-500 mr-2"></i>Return Processing Desk</h3>
+            <div class="flex gap-2">
+              <button onclick="openAddReturnModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition"><i class="fa-solid fa-plus mr-1"></i> Log Return Case</button>
+              <button onclick="exportReturnsToCSV()" class="px-3 py-1.5 bg-slate-600 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition"><i class="fa-solid fa-file-export mr-1"></i> Export CSV</button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Brand</th>
+                  <th>Marketplace</th>
+                  <th>Order ID</th>
+                  <th>Design Name</th>
+                  <th>Size</th>
+                  <th>Reason</th>
+                  <th>Status</th>
+                  <th>Refund Amount</th>
+                  <th>Internal Notes</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="returnsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. MESSAGES VIEW -->
+      <div id="tab-messages" class="tab-content hidden">
+        <div class="card p-5">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-envelope text-indigo-500 mr-2"></i>Customer Messages Inbox</h3>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Brand</th>
+                  <th>Customer</th>
+                  <th>Message Snippet</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Agent Allocated</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="messagesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. INVENTORY VIEW -->
+      <div id="tab-inventory" class="tab-content hidden">
+        <div class="card p-5">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-boxes-stacked text-indigo-500 mr-2"></i>Master Stock Inventory</h3>
+            <div class="flex flex-wrap gap-2 items-center">
+              <input type="text" id="inventorySearch" placeholder="Search Design / SKU..." class="border border-slate-300 dark:border-slate-600 px-3 py-1.5 rounded-lg text-xs bg-transparent text-slate-800 dark:text-white" oninput="renderInventory()">
+              <button onclick="openAddSkuModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition"><i class="fa-solid fa-plus mr-1"></i> Add SKU</button>
+              <button onclick="exportInventoryCSV()" class="px-3 py-1.5 bg-slate-600 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition"><i class="fa-solid fa-file-arrow-down mr-1"></i> Export CSV</button>
+              <button onclick="document.getElementById('csvImportInput').click()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition"><i class="fa-solid fa-file-arrow-up mr-1"></i> Import CSV</button>
+              <input type="file" id="csvImportInput" class="hidden" accept=".csv" onchange="importInventoryCSV(event)">
+            </div>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Asset</th>
+                  <th>Product Design</th>
+                  <th>SKU</th>
+                  <th>Loc</th>
+                  <th>Size</th>
+                  <th>Opening</th>
+                  <th>Sold</th>
+                  <th>Current</th>
+                  <th>Status</th>
+                  <th>Quick Adjustment</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inventoryTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. MARKETPLACE VIEW -->
+      <div id="tab-marketplace" class="tab-content hidden">
+        <div class="card p-5">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-shop text-indigo-500 mr-2"></i>Marketplace Channels Hub</h3>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Marketplace Platform</th>
+                  <th>Total Orders Placed</th>
+                  <th>Gross sales Revenue</th>
+                  <th>Returns Registered</th>
+                  <th>Avg Rating Performance</th>
+                </tr>
+              </thead>
+              <tbody id="marketplaceTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. SHIPMENTS VIEW -->
+      <div id="tab-shipments" class="tab-content hidden">
+        <div class="card p-5">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-truck-fast text-indigo-500 mr-2"></i>Logistics Shipment Dispatch Tracker</h3>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mb-3 font-semibold">Active shipments automatically map from orders containing verified carriers and tracking references.</p>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Order SKU</th>
+                  <th>Carrier Company</th>
+                  <th>Tracking Reference ID</th>
+                  <th>Delivery Status</th>
+                  <th>Tracking Remarks</th>
+                  <th>Logistics Trigger</th>
+                </tr>
+              </thead>
+              <tbody id="shipmentsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. ADS VIEW -->
+      <div id="tab-ads" class="tab-content hidden">
+        <div class="card p-5">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-rectangle-ad text-indigo-500 mr-2"></i>Marketing & Ads Campaigns</h3>
+            <button onclick="openAddAdCampaignModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition"><i class="fa-solid fa-plus mr-1"></i> New Campaign</button>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Campaign Name</th>
+                  <th>Spend Total</th>
+                  <th>Driven Sales</th>
+                  <th>Impressions</th>
+                  <th>Clicks</th>
+                  <th>Conversions</th>
+                  <th>ROAS Indicator</th>
+                  <th>ACoS (%)</th>
+                  <th>Performance Tag</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. EMPLOYEES/TASKS VIEW -->
+      <div id="tab-employees" class="tab-content hidden space-y-6">
+        
+        <!-- WORKFORCE CARDS & ATTENDANCE SUBPANEL SPLIT -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- LEFT: WORKFORCE PROFILE CARD DIRECTORY -->
+          <div class="card p-5 lg:col-span-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+                <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-users text-indigo-500 mr-2"></i>Operations Workforce</h3>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="employeesCardGrid">
+                <!-- Loaded dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: WORKFORCE ATTENDANCE LOGGING WITH MULTI-SHEET CONTROLS -->
+          <div class="card p-5 lg:col-span-7 flex flex-col">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+              <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-regular fa-calendar-check text-indigo-500 mr-2"></i>Duty Attendance Portal</h3>
+              
+              <!-- ATTENDANCE MATRIX CONTROLLER SUBTABS -->
+              <div class="flex gap-1.5 bg-slate-100 dark:bg-slate-700/50 p-1 rounded-lg border border-slate-200 dark:border-slate-600">
+                <button id="subtab-mark-btn" onclick="toggleAttendanceSubtab('mark')" class="px-2.5 py-1 text-xs font-bold rounded-md transition bg-white dark:bg-slate-800 text-indigo-600 shadow-sm">Mark Duty</button>
+                <button id="subtab-week-btn" onclick="toggleAttendanceSubtab('week')" class="px-2.5 py-1 text-xs font-semibold rounded-md transition text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">Weekly Grid</button>
+                <button id="subtab-month-btn" onclick="toggleAttendanceSubtab('month')" class="px-2.5 py-1 text-xs font-semibold rounded-md transition text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">Logs Ledger</button>
+              </div>
+            </div>
+
+            <!-- Subtab 1: Mark Attendance Forms -->
+            <div id="attendance-subtab-mark">
+              <div class="flex flex-col gap-3">
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Select Employee Persona</label>
+                    <select class="w-full border border-slate-300 dark:border-slate-600 px-3 py-1.5 rounded-lg text-xs bg-transparent text-slate-800 dark:text-white" id="attendanceEmployeeSelect" required onchange="updateSelectedEmployeeStatus()">
+                      <!-- Populated dynamically based on Workforce -->
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Duty Status / Note</label>
+                    <select class="w-full border border-slate-300 dark:border-slate-600 px-3 py-1.5 rounded-lg text-xs bg-transparent text-slate-800 dark:text-white" id="attendanceStatusSelect" required>
+                      <option value="Present (Office)">Present (Office)</option>
+                      <option value="Present (WFH)">Present (WFH)</option>
+                      <option value="On Sick Leave">On Sick Leave</option>
+                      <option value="On Paid Leave">On Paid Leave</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <!-- Live status feedback tracker element -->
+                <div class="text-xs font-bold flex items-center gap-2 my-1">
+                  <span class="text-slate-400 uppercase tracking-wider text-[10px]">Current Daily Status:</span>
+                  <span id="selectedEmployeeStatus"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[10px]">Not Checked</span></span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <button type="button" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition" onclick="logAttendanceEvent('Check-In')"><i class="fa-solid fa-right-to-bracket"></i> Daily Check-In</button>
+                  <button type="button" class="w-full py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg transition" onclick="logAttendanceEvent('Check-Out')"><i class="fa-solid fa-right-from-bracket"></i> Daily Check-Out</button>
+                </div>
+                <div class="text-center text-xs text-slate-400" id="activeAttendanceCount">0 logs registered today</div>
+              </div>
+            </div>
+
+            <!-- Subtab 2: Weekly Matrix Grid -->
+            <div id="attendance-subtab-week" class="hidden space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-slate-500 dark:text-slate-400 font-semibold">Active calendar week matrix presence trace.</span>
+                <button onclick="downloadWeeklyAttendance()" class="px-2.5 py-1 bg-slate-600 hover:bg-slate-700 text-white text-[11px] font-bold rounded transition"><i class="fa-solid fa-file-csv mr-1"></i> Export Week</button>
+              </div>
+              <div class="table-container max-h-[160px] overflow-y-auto">
+                <table>
+                  <thead>
+                    <tr id="weekly-matrix-headers">
+                      <th>Employee</th>
+                      <th>Mon</th>
+                      <th>Tue</th>
+                      <th>Wed</th>
+                      <th>Thu</th>
+                      <th>Fri</th>
+                      <th>Sat</th>
+                      <th>Sun</th>
+                    </tr>
+                  </thead>
+                  <tbody id="weekly-matrix-body"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Subtab 3: Logs Ledger List -->
+            <div id="attendance-subtab-month" class="hidden space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <label class="text-xs text-slate-500 dark:text-slate-400 font-semibold">Month:</label>
+                  <input type="month" id="attendanceMonthPicker" class="border border-slate-300 dark:border-slate-600 px-2 py-1 rounded text-xs bg-transparent text-slate-800 dark:text-white" value="2026-07">
+                  <button onclick="downloadMonthlyAttendance()" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold rounded transition"><i class="fa-solid fa-download mr-1"></i> Export Month</button>
+                </div>
+              </div>
+              <div class="table-container max-h-[160px] overflow-y-auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Employee</th>
+                      <th>Action</th>
+                      <th>Status Duty Note</th>
+                      <th>Logged Time</th>
+                    </tr>
+                  </thead>
+                  <tbody id="attendanceTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- LOWER KANBAN TASKS COMPONENT -->
+        <div class="card p-5">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-clipboard-list text-indigo-500 mr-2"></i>Central Operations Kanban Board</h3>
+            <button onclick="openAddTaskModal()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition"><i class="fa-solid fa-plus mr-1"></i> Add New Task</button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="kanbanLanes">
+            
+            <!-- Lane 1: TO DO -->
+            <div class="kanban-col p-4 flex flex-col gap-3">
+              <div class="flex items-center justify-between font-bold text-xs text-slate-500 uppercase border-b border-slate-200 dark:border-slate-700 pb-2">
+                <span>To Do</span>
+                <span class="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-full" id="todoTaskCount">0</span>
+              </div>
+              <div class="flex flex-col gap-3 overflow-y-auto max-h-[400px] p-1" id="todoTaskList"></div>
+            </div>
+
+            <!-- Lane 2: IN PROGRESS -->
+            <div class="kanban-col p-4 flex flex-col gap-3">
+              <div class="flex items-center justify-between font-bold text-xs text-slate-500 uppercase border-b border-slate-200 dark:border-slate-700 pb-2">
+                <span>In Progress</span>
+                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full" id="inprogressTaskCount">0</span>
+              </div>
+              <div class="flex flex-col gap-3 overflow-y-auto max-h-[400px] p-1" id="inprogressTaskList"></div>
+            </div>
+
+            <!-- Lane 3: DONE -->
+            <div class="kanban-col p-4 flex flex-col gap-3">
+              <div class="flex items-center justify-between font-bold text-xs text-slate-500 uppercase border-b border-slate-200 dark:border-slate-700 pb-2">
+                <span>Done</span>
+                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full" id="doneTaskCount">0</span>
+              </div>
+              <div class="flex flex-col gap-3 overflow-y-auto max-h-[400px] p-1" id="doneTaskList"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. HISTORY VIEW -->
+      <div id="tab-history" class="tab-content hidden">
+        <div class="card p-5">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-clock-rotate-left text-indigo-500 mr-2"></i>Security & Activity Audit Log</h3>
+            <button onclick="triggerPurgeAuditLogs()" class="p-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition" title="Clear All History Logs"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Operator</th>
+                  <th>Action Category</th>
+                  <th>Context Details</th>
+                  <th>IP Address</th>
+                  <th>Physical Location</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11. RESOURCES VIEW -->
+      <div id="tab-resources" class="tab-content hidden">
+        <div class="card p-5">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-folder-open text-indigo-500 mr-2"></i>Enterprise Resource Directory</h3>
+            <button onclick="openAddResourceModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition"><i class="fa-solid fa-plus mr-1"></i> Add Link</button>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4" id="resourcesGrid"></div>
+        </div>
+      </div>
+
+      <!-- 12. ACCESS CONTROL VIEW (Simulated Prototype Role configuration) -->
+      <div id="tab-access" class="tab-content hidden">
+        <div class="card p-5">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-user-lock text-indigo-500 mr-2"></i>Simulation Persona Configurations</h3>
+            <span class="text-xs font-bold uppercase text-slate-400">Sandbox Simulator Config Desk</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            
+            <!-- Left config pane: Toggle simulation scopes -->
+            <div class="md:col-span-4 bg-slate-50 dark:bg-slate-700/30 p-4 rounded-lg border border-slate-200 dark:border-slate-600">
+              <h4 class="font-bold text-xs text-slate-800 dark:text-white uppercase mb-3">Map Simulated View Permissions</h4>
+              <div class="form-group mb-4">
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Target Role / Persona</label>
+                <select id="configTargetPersona" onchange="loadPersonaPermissionsToInputs(this.value)" class="w-full border border-slate-300 dark:border-slate-600 px-3 py-2 rounded-lg text-xs bg-transparent text-slate-800 dark:text-white">
+                  <option value="Admin">System Administrator (Admin)</option>
+                  <option value="Suraj">Suraj (Operations)</option>
+                  <option value="Shivam">Shivam (Customer Support)</option>
+                  <option value="Sushant">Sushant (Inventory Manager)</option>
+                  <option value="Mona">Mona (Marketing)</option>
+                  <option value="Aditya">Aditya (Sales)</option>
+                  <option value="Vineeta">Vineeta (Operations)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-2">Check Permitted Worksheet Tabs</label>
+                <div class="grid grid-cols-2 gap-2" id="allowedTabsChecklist">
+                  <!-- Dynamically mapped tabs checklist -->
+                </div>
+              </div>
+
+              <button onclick="submitPersonaPermissionConfiguration()" class="w-full mt-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow transition">
+                Apply Role Mapping
+              </button>
+            </div>
+
+            <!-- Right list pane: Overview -->
+            <div class="md:col-span-8 space-y-4">
+              <h4 class="font-bold text-xs text-slate-600 dark:text-slate-400 uppercase">Interactive Persona Simulation Roster</h4>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Simulated Persona</th>
+                      <th>Role Description</th>
+                      <th>Allowed Workspace Tab Visibility</th>
+                    </tr>
+                  </thead>
+                  <tbody id="accessTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- SLIDE OUT SIDE FILTERS VIEW -->
+  <div class="side-panel flex flex-col justify-between" id="filterPanel">
+    <div class="p-5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+      <span class="font-bold text-slate-800 dark:text-white text-sm"><i class="fa-solid fa-filter text-indigo-500 mr-1"></i>Global segment filters</span>
+      <button onclick="toggleFilterPanel(false)" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <div class="p-5 flex-1 overflow-y-auto space-y-4">
+      <div>
+        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Start Date</label>
+        <input type="date" id="filterStartDate" class="w-full border rounded px-3 py-2 text-xs bg-transparent text-slate-800 dark:text-white border-slate-300 dark:border-slate-600">
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">End Date</label>
+        <input type="date" id="filterEndDate" class="w-full border rounded px-3 py-2 text-xs bg-transparent text-slate-800 dark:text-white border-slate-300 dark:border-slate-600">
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">Segment Brands</label>
+        <div class="p-3 bg-slate-50 dark:bg-slate-700/30 border rounded space-y-2 max-h-[140px] overflow-y-auto border-slate-200 dark:border-slate-600" id="filterBrandList">
+          <!-- Populated from list -->
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">Segment Marketplaces</label>
+        <div class="p-3 bg-slate-50 dark:bg-slate-700/30 border rounded space-y-2 max-h-[120px] overflow-y-auto border-slate-200 dark:border-slate-600" id="filterMarketplaceList">
+          <!-- Populated from list -->
+        </div>
+      </div>
+    </div>
+
+    <div class="p-5 border-t border-slate-200 dark:border-slate-700 flex gap-2">
+      <button onclick="applyFilters()" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded shadow transition">Apply</button>
+      <button onclick="resetFilters()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold rounded transition">Reset</button>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- CUSTOM INLINE POPUP DIALOG SYSTEM (Replacing native alerts) -->
+  
+  <!-- Add/Edit Single Order Modal -->
+  <div class="modal-backdrop" id="orderModal">
+    <div class="modal p-6 w-full max-w-lg bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+        <h3 class="font-extrabold text-sm text-slate-800 dark:text-white" id="orderModalTitle">Add New Order</h3>
+        <button onclick="closeModal('orderModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="orderForm" onsubmit="event.preventDefault(); submitOrderForm();">
+        <div class="space-y-3">
+          <input type="hidden" id="orderEditId">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Order Date</label>
+              <input type="date" id="orderDate" class="w-full border rounded px-3 py-2 text-xs bg-transparent dark:text-white border-slate-300 dark:border-slate-600">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Brand</label>
+              <select id="orderBrand" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+                <option value="WA">WA</option>
+                <option value="BM(RRP)">BM(RRP)</option>
+                <option value="RBN(PB)">RBN(PB)</option>
+                <option value="WW">WW</option>
+                <option value="NS">NS</option>
+                <option value="RO">RO</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Marketplace</label>
+              <select id="orderMarketplace" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+                <option value="Amazon">Amazon</option>
+                <option value="Etsy">Etsy</option>
+                <option value="Walmart">Walmart</option>
+                <option value="eBay">eBay</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Design Name</label>
+              <select id="orderDesign" onchange="autoGenerateSkuField()" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+                <option value="">-- Choose Design --</option>
+                <option value="CECIL GREEN">CECIL GREEN</option>
+                <option value="IKAT BROWN">IKAT BROWN</option>
+                <option value="IKAT PINK">IKAT PINK</option>
+                <option value="ADELINE MULTI">ADELINE MULTI</option>
+                <option value="EVA MULTI">EVA MULTI</option>
+                <option value="ELHAM">ELHAM</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Size Dimension</label>
+              <select id="orderSize" onchange="autoGenerateSkuField()" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+                <option value="">-- Choose Size --</option>
+                <option value="9X12">9X12</option>
+                <option value="8X10">8X10</option>
+                <option value="6X8">6X8</option>
+                <option value="5X8">5X8</option>
+                <option value="4X6">4X6</option>
+                <option value="3X5">3X5</option>
+                <option value="2.6X7">2.6X7</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Auto SKU</label>
+              <input type="text" id="orderSku" class="w-full border rounded px-3 py-2 text-xs bg-slate-50 dark:bg-slate-700/30 text-slate-500 cursor-not-allowed border-slate-300 dark:border-slate-600" readonly>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Qty</label>
+              <input type="number" id="orderQty" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" value="1" min="1">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Sales Cost (USD)</label>
+              <input type="number" id="orderSales" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" value="0" min="0">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Order Status</label>
+              <select id="orderStatus" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+                <option value="Pending">Pending</option>
+                <option value="In Process">In Process</option>
+                <option value="Hand Over">Hand Over</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Canceled">Canceled</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Carrier</label>
+              <select id="orderCarrier" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+                <option value="">-- None --</option>
+                <option value="FedEx">FedEx</option>
+                <option value="UPS">UPS</option>
+                <option value="DHL">DHL</option>
+                <option value="USPS">USPS</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Tracking Number Reference</label>
+            <input type="text" id="orderTracking" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="3813XXXXXXXX">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Remarks Notes</label>
+            <input type="text" id="orderRemarks" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-6 border-t border-slate-200 dark:border-slate-700 pt-3">
+          <button type="button" onclick="closeModal('orderModal')" class="px-3.5 py-1.5 border rounded-lg text-xs bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600">Cancel</button>
+          <button type="submit" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow">Save Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabular Bulk Orders Importer Modal -->
+  <div class="modal-backdrop" id="tabularBulkOrderModal">
+    <div class="modal p-6 w-full max-w-[950px] bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+        <h3 class="font-extrabold text-sm text-slate-800 dark:text-white"><i class="fa-solid fa-table text-indigo-500 mr-2"></i>Interactive Tabular Orders Importer</h3>
+        <button onclick="closeModal('tabularBulkOrderModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      
+      <p class="text-xs text-slate-500 dark:text-slate-400 mb-3 font-semibold">Verify rows below with custom values. Click + Add Row to expand, and click Commit to save all records concurrently.</p>
+
+      <div class="table-container max-h-[340px] overflow-y-auto mb-4">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 10%;">Brand</th>
+              <th style="width: 12%;">Marketplace</th>
+              <th style="width: 18%;">Design Name</th>
+              <th style="width: 10%;">Size</th>
+              <th style="width: 8%;">Qty</th>
+              <th style="width: 12%;">Sales Cost</th>
+              <th style="width: 14%;">Fulfillment Status</th>
+              <th style="width: 6%;">Drop</th>
+            </tr>
+          </thead>
+          <tbody id="tabularBulkOrderBody">
+            <!-- Dynamic rows with inputs/selectors go here -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+        <button onclick="addTabularBulkRow()" class="px-3 py-1.5 border border-indigo-600 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 text-xs font-bold rounded-lg transition"><i class="fa-solid fa-plus mr-1"></i> Add Another Row</button>
+        <div class="flex gap-2">
+          <button onclick="closeModal('tabularBulkOrderModal')" class="px-3.5 py-1.5 border rounded-lg text-xs bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600">Cancel</button>
+          <button onclick="submitTabularBulkOrders()" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold rounded-lg shadow-md transition">Commit Bulk Orders</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dispatch Tracking Modal -->
+  <div class="modal-backdrop" id="shipModal">
+    <div class="modal p-6 w-full max-w-md bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+        <h3 class="font-extrabold text-sm text-slate-800 dark:text-white">Logistics Dispatch Scheduler</h3>
+        <button onclick="closeModal('shipModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="space-y-3">
+        <input type="hidden" id="shipOrderId">
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">Logistics Carrier</label>
+          <select id="shipCarrier" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+            <option value="FedEx">FedEx</option>
+            <option value="UPS">UPS</option>
+            <option value="DHL">DHL</option>
+            <option value="USPS">USPS</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">Logistics Tracking Reference ID</label>
+          <input type="text" id="shipTracking" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="e.g. 38100XXXXXXXX">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">Internal tracking Remarks</label>
+          <input type="text" id="shipRemarks" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-6 border-t border-slate-200 dark:border-slate-700 pt-3">
+        <button onclick="closeModal('shipModal')" class="px-3.5 py-1.5 border rounded-lg text-xs bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600">Cancel</button>
+        <button onclick="submitLogisticsDispatch()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow">Confirm Dispatch</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Returns Modal -->
+  <div class="modal-backdrop" id="returnModal">
+    <div class="modal p-6 w-full max-w-md bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+        <h3 class="font-extrabold text-sm text-slate-800 dark:text-white" id="returnModalTitle">Log Return Case</h3>
+        <button onclick="closeModal('returnModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="returnForm" onsubmit="event.preventDefault(); submitReturnForm();">
+        <div class="space-y-3">
+          <input type="hidden" id="returnEditId">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Associated Order ID</label>
+            <input type="text" id="returnOrderId" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" required>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Return Date</label>
+            <input type="date" id="returnDate" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" required>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Brand</label>
+              <select id="returnBrand" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+                <option value="WA">WA</option>
+                <option value="BM(RRP)">BM(RRP)</option>
+                <option value="RBN(PB)">RBN(PB)</option>
+                <option value="WW">WW</option>
+                <option value="NS">NS</option>
+                <option value="RO">RO</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Marketplace</label>
+              <select id="returnMarketplace" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+                <option value="Amazon">Amazon</option>
+                <option value="Etsy">Etsy</option>
+                <option value="Walmart">Walmart</option>
+                <option value="eBay">eBay</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Design Name</label>
+              <input type="text" id="returnDesign" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" required>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Size</label>
+              <input type="text" id="returnSize" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="e.g. 5X8" required>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Reason for Return</label>
+            <input type="text" id="returnReason" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="e.g. Inaccurate description" required>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Return status</label>
+              <select id="returnStatus" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+                <option value="Return Received">Return Received</option>
+                <option value="Refund Processed">Refund Processed</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Refund Amount (USD)</label>
+              <input type="number" id="returnRefund" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" step="0.01" required>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Internal notes</label>
+            <input type="text" id="returnNotes" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-6 border-t border-slate-200 dark:border-slate-700 pt-3">
+          <button type="button" onclick="closeModal('returnModal')" class="px-3.5 py-1.5 border rounded-lg text-xs bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600">Cancel</button>
+          <button type="submit" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow">Save return</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Messages Reply Modal -->
+  <div class="modal-backdrop" id="messageModal">
+    <div class="modal p-6 w-full max-w-md bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+        <h3 class="font-extrabold text-sm text-slate-800 dark:text-white">Respond to Customer Inquiries</h3>
+        <button onclick="closeModal('messageModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="space-y-3">
+        <input type="hidden" id="replyMsgId">
+        <div class="p-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg">
+          <strong class="text-xs font-bold" id="replyCustomerName">Customer</strong>
+          <p id="replyOriginalText" class="text-xs mt-1 text-slate-500 dark:text-slate-400 italic"></p>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">Draft Operator Reply</label>
+          <textarea id="replyMsgText" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" rows="3" placeholder="Compose customer response..."></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Assign Agent</label>
+            <select id="replyAgent" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+              <!-- Filled dynamically from Workforce -->
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Status Lane</label>
+            <select id="replyStatus" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+              <option value="Follow-Up">Follow-Up</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-6 border-t border-slate-200 dark:border-slate-700 pt-3">
+        <button onclick="closeModal('messageModal')" class="px-3.5 py-1.5 border rounded-lg text-xs bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600">Cancel</button>
+        <button onclick="submitMessageReply()" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow"><i class="fa-solid fa-paper-plane mr-1"></i> Send Reply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKU Create Modal -->
+  <div class="modal-backdrop" id="skuModal">
+    <div class="modal p-6 w-full max-w-md bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+        <h3 class="font-extrabold text-sm text-slate-800 dark:text-white">Create New Master SKU Listing</h3>
+        <button onclick="closeModal('skuModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="skuForm" onsubmit="event.preventDefault(); submitSkuForm();">
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Design Name</label>
+            <input type="text" id="skuDesign" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="CECIL GREEN" required>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Size Dimension</label>
+            <input type="text" id="skuSize" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="e.g. 9X12" required>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Unique SKU Code</label>
+            <input type="text" id="skuCode" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="CEC-GRE-9X12-001" required>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Stock Location</label>
+              <input type="text" id="skuLocation" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" value="UP">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Opening Stock Balance</label>
+              <input type="number" id="skuOpening" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" value="10" min="0">
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-6 border-t border-slate-200 dark:border-slate-700 pt-3">
+          <button type="button" onclick="closeModal('skuModal')" class="px-3.5 py-1.5 border rounded-lg text-xs bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600">Cancel</button>
+          <button type="submit" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow">Register SKU</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SKU Image Edit Modal -->
+  <div class="modal-backdrop" id="skuImageModal">
+    <div class="modal p-6 w-full max-w-md bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+        <h3>Associate SKU Image Asset</h3>
+        <button onclick="closeModal('skuImageModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="space-y-3">
+        <input type="hidden" id="imgSkuTarget">
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">Image Web URL</label>
+          <input type="text" id="skuImgUrl" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="https://example.com/image.jpg">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">Or Upload Local Image File</label>
+          <input type="file" id="skuFileAsset" accept="image/*" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-6 border-t border-slate-200 dark:border-slate-700 pt-3">
+        <button onclick="removeSkuImage()" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-lg shadow">Remove Asset</button>
+        <button onclick="closeModal('skuImageModal')" class="px-3.5 py-1.5 border rounded-lg text-xs bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600">Cancel</button>
+        <button onclick="submitSkuImage()" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow">Confirm Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ads Campaign Modal -->
+  <div class="modal-backdrop" id="adCampaignModal">
+    <div class="modal p-6 w-full max-w-md bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+        <h3 class="font-extrabold text-sm text-slate-800 dark:text-white" id="adModalTitle">Add Ad Campaign Entry</h3>
+        <button onclick="closeModal('adCampaignModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="adForm" onsubmit="event.preventDefault(); submitAdForm();">
+        <div class="space-y-3">
+          <input type="hidden" id="adEditId">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Campaign Name</label>
+            <input type="text" id="adName" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="Q3 Sponsored Ads" required>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Spend Total (USD)</label>
+              <input type="number" id="adSpend" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" value="0" step="0.01" required>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Driven Sales (USD)</label>
+              <input type="number" id="adSales" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" value="0" step="0.01" required>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-500 mb-1 uppercase">Impressions</label>
+              <input type="number" id="adImpressions" class="w-full border rounded px-2 py-1.5 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" value="0" required>
+            </div>
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-500 mb-1 uppercase">Clicks</label>
+              <input type="number" id="adClicks" class="w-full border rounded px-2 py-1.5 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" value="0" required>
+            </div>
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-500 mb-1 uppercase">Conversions</label>
+              <input type="number" id="adConversions" class="w-full border rounded px-2 py-1.5 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" value="0" required>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-6 border-t border-slate-200 dark:border-slate-700 pt-3">
+          <button type="button" onclick="closeModal('adCampaignModal')" class="px-3.5 py-1.5 border rounded-lg text-xs bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600">Cancel</button>
+          <button type="submit" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow">Save Campaign</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tasks Modal -->
+  <div class="modal-backdrop" id="taskModal">
+    <div class="modal p-6 w-full max-w-md bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+        <h3 class="font-extrabold text-sm text-slate-800 dark:text-white" id="taskModalTitle">Add Operations Task</h3>
+        <button onclick="closeModal('taskModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="taskForm" onsubmit="event.preventDefault(); submitTaskForm();">
+        <div class="space-y-3">
+          <input type="hidden" id="taskEditId">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Task Title</label>
+            <input type="text" id="taskTitle" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="Audit SKU stock listing balances" required>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Assign Operator Agent</label>
+              <select id="taskAssignee" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Priority Grade</label>
+              <select id="taskPriority" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Task Due Date</label>
+              <input type="date" id="taskDueDate" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Progress Percentage (%)</label>
+              <input type="number" id="taskProgress" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" value="0" min="0" max="100" required>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Status Lane Column</label>
+            <select id="taskStatus" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+              <option value="To Do">To Do</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Done">Done</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-6 border-t border-slate-200 dark:border-slate-700 pt-3">
+          <button type="button" onclick="closeModal('taskModal')" class="px-3.5 py-1.5 border rounded-lg text-xs bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600">Cancel</button>
+          <button type="submit" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow">Commit Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Resources Modal -->
+  <div class="modal-backdrop" id="resourceModal">
+    <div class="modal p-6 w-full max-w-md bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+        <h3 class="font-extrabold text-sm text-slate-800 dark:text-white" id="resourceModalTitle">Add Enterprise Directory Link</h3>
+        <button onclick="closeModal('resourceModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="resourceForm" onsubmit="event.preventDefault(); submitResourceForm();">
+        <div class="space-y-3">
+          <input type="hidden" id="resourceEditId">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Resource Name</label>
+            <input type="text" id="resourceName" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="e.g. ImgBB Asset Host" required>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Fully Qualified Resource URL</label>
+            <input type="url" id="resourceUrl" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="https://imgbb.com/" required>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Brand Logo Image URL (Optional)</label>
+            <input type="url" id="resourceLogoUrl" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="https://logo.clearbit.com/imgbb.com">
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-6 border-t border-slate-200 dark:border-slate-700 pt-3">
+          <button type="button" onclick="closeModal('resourceModal')" class="px-3.5 py-1.5 border rounded-lg text-xs bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600">Cancel</button>
+          <button type="submit" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow">Add Resource</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CUSTOM INLINE CONFIRMATION DIALOG MODAL -->
+  <div class="modal-backdrop" id="confirmModal">
+    <div class="modal p-5 w-full max-w-sm bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl">
+      <div class="flex items-center gap-3 mb-3 text-amber-600 dark:text-amber-500 text-base">
+        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+        <h4 class="font-extrabold text-sm text-slate-800 dark:text-white" id="confirmTitle">System Action Confirmation</h4>
+      </div>
+      <p id="confirmMessage" class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">Are you absolutely sure you want to perform this system transaction?</p>
+      <div class="flex justify-end gap-2 mt-5 border-t border-slate-150 dark:border-slate-700/80 pt-3">
+        <button id="confirmCancelBtn" class="px-3 py-1.5 border rounded text-xs bg-slate-50 dark:bg-slate-850 hover:bg-slate-100 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600">Cancel</button>
+        <button id="confirmOkBtn" class="px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded shadow-sm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOM INLINE INPUT PROMPT MODAL -->
+  <div class="modal-backdrop" id="inlinePromptModal">
+    <div class="modal p-5 w-full max-w-sm bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl">
+      <div class="flex items-center gap-3 mb-3 text-indigo-600 dark:text-indigo-400">
+        <i class="fa-solid fa-pen-to-square text-xl"></i>
+        <h4 class="font-extrabold text-sm text-slate-800 dark:text-white" id="promptTitle">Update Notes Details</h4>
+      </div>
+      <div class="space-y-3">
+        <p id="promptMessage" class="text-xs text-slate-600 dark:text-slate-300"></p>
+        <input type="text" id="promptInputField" class="w-full border rounded px-3 py-2 text-xs bg-transparent border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white" placeholder="Enter updated details notes...">
+      </div>
+      <div class="flex justify-end gap-2 mt-5 border-t border-slate-150 dark:border-slate-700/80 pt-3">
+        <button id="promptCancelBtn" class="px-3 py-1.5 border rounded text-xs bg-slate-50 dark:bg-slate-850 hover:bg-slate-100 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600">Cancel</button>
+        <button id="promptOkBtn" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded shadow-sm">Save Note</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- SYSTEM JAVASCRIPT STATE ENGINE -->
+  <script>
+    // SYSTEM DATA PERSISTENCE DEFINITION
+    const STORAGE_KEY = 'dashboardData';
+    const THEME_KEY = 'theme';
+
+    // GLOBAL MOCK AUTO-GENERATING SKU MAP
+    const SKU_MAP = {
+      'CECIL GREEN|9X12': 'CEC-GRE-9X12-001',
+      'CECIL GREEN|8X10': 'CEC-GRE-8X10-002',
+      'CECIL GREEN|5X8': 'CEC-GRE-5X8-005',
+      'CECIL GREEN|4X6': 'CEC-GRE-4X6-006',
+      'CECIL GREEN|3X5': 'CEC-GRE-3X5-007',
+      'IKAT BROWN|9X12': 'IKA-BRO-9X12-191',
+      'IKAT BROWN|8X10': 'IKA-BRO-8X10-192',
+      'IKAT BROWN|5X8': 'IKA-BRO-5X8-193',
+      'IKAT PINK|8X10': 'IKA-PIN-8X10-198',
+      'IKAT PINK|5X8': 'IKA-PIN-5X8-200',
+      'IKAT PINK|4X6': 'IKA-PIN-4X6-201',
+      'ADELINE MULTI|8X10': 'ADE-MUL-8X10-038',
+      'EVA MULTI|4X6': 'EVA-MUL-006',
+      'ELHAM|8X10': 'ELH-CAM-8X10-246'
+    };
+
+    // SYSTEM STATE ARCHITECTURE
+    let appState = {
+      orders: [],
+      returns: [],
+      messages: [],
+      inventory: [],
+      ads: [],
+      tasks: [],
+      employees: [],
+      history: [],
+      resources: [],
+      attendance: [], // Workforce daily attendance logs
+      // MAP ACTIVE VISIBILITIES (Safe configurations instead of passwords)
+      personaConfigs: {
+        'Admin': ['dashboard', 'orders', 'returns', 'messages', 'inventory', 'marketplace', 'shipments', 'ads', 'employees', 'history', 'resources', 'access'],
+        'Suraj': ['dashboard', 'orders', 'shipments', 'employees'],
+        'Shivam': ['dashboard', 'messages', 'employees'],
+        'Sushant': ['dashboard', 'inventory', 'employees'],
+        'Mona': ['dashboard', 'ads', 'employees'],
+        'Aditya': ['dashboard', 'marketplace', 'employees'],
+        'Vineeta': ['dashboard', 'orders', 'employees']
+      },
+      activePersona: 'Admin' // Loads into Admin persona automatically without password prompts
+    };
+
+    // USER NETWORK GEOLOCATION (SIMULATED PROTOTYPE TELEMETRY)
+    let ipAddress = '127.0.0.1';
+    let physicalLocation = 'Local Prototype Sandbox';
+
+    // GLOBAL ACTIVE SYSTEM FILTERS STATE
+    let activeFilters = {
+      startDate: '',
+      endDate: '',
+      brands: ['WA', 'BM(RRP)', 'RBN(PB)', 'WW', 'NS', 'RO'],
+      marketplaces: ['Amazon', 'Etsy', 'Walmart', 'eBay']
+    };
+
+    // MULTI-SELECT ORDER STATE
+    let selectedOrderIds = [];
+
+    // PERSONA DEFINITIONS FOR GRID OVERVIEWS
+    const PREDEFINED_ROLES = {
+      'Admin': 'System Administrator',
+      'Suraj': 'Operations Executive',
+      'Shivam': 'Customer Support Lead',
+      'Sushant': 'Inventory Manager',
+      'Mona': 'Marketing Strategist',
+      'Aditya': 'Sales Lead',
+      'Vineeta': 'Operations Executive'
+    };
+
+    // KEEP BASELINE WORKFORCE CONFIGURATIONS TO PREVENT SELECTION DROPDOWNS FROM BREAKING
+    const INITIAL_EMPLOYEES = [
+      {name:'Suraj',role:'Operations',rating:4.5},
+      {name:'Shivam',role:'Customer Support',rating:4.2},
+      {name:'Sushant',role:'Inventory Manager',rating:4.6},
+      {name:'Mona',role:'Marketing',rating:4.0},
+      {name:'Aditya',role:'Sales',rating:4.4},
+      {name:'Vineeta',role:'Operations',rating:4.3}
+    ];
+
+    // EXACTLY 2 DEMO DATA PIECES PER MAIN OPERATIONS TAB FOR VISUAL HEALTH
+    const DEMO_ORDERS = [
+      {id:1,date:'2026-07-01',brand:'RBN(PB)',marketplace:'Amazon',design:'CECIL GREEN',size:'9X12',sku:'CEC-GRE-9X12-001',sales:590,qty:1,status:'Delivered',tracking:'1Z999AA10123456784',carrier:'UPS',trackingRemarks:'Handed over to guard',remarks:'Priority packaging'},
+      {id:2,date:'2026-07-05',brand:'BM(RRP)',marketplace:'Etsy',design:'IKAT BROWN',size:'8X10',sku:'IKA-BRO-8X10-192',sales:320,qty:1,status:'Pending',tracking:'',carrier:'',trackingRemarks:'',remarks:''}
+    ];
+
+    const DEMO_RETURNS = [
+      {id:1,orderId:'113-4034595-4845810',returnDate:'2026-07-02',brand:'RBN(PB)',marketplace:'Amazon',design:'CECIL GREEN',size:'9X12',reason:'Inaccurate description',status:'Return Received',refundAmount:590.00,notes:'Borders are lighter green'},
+      {id:2,orderId:'E-81239-A',returnDate:'2026-07-06',brand:'BM(RRP)',marketplace:'Etsy',design:'IKAT BROWN',size:'8X10',reason:'Incorrect size sent',status:'Refund Processed',refundAmount:320.00,notes:'Customer returned tracking registered'}
+    ];
+
+    const DEMO_MESSAGES = [
+      {id:1,date:'2026-07-03',brand:'RBN(PB)',customer:'Alice Johnson',message:'Can I get custom tracking updates sent to my mobile number directly?',priority:'Medium',status:'Follow-Up',handledBy:'Shivam'},
+      {id:2,date:'2026-07-07',brand:'BM(RRP)',customer:'Mark Taylor',message:'Do you have additional stock of IKAT PINK available for fast dispatch?',priority:'Low',status:'Resolved',handledBy:'Suraj'}
+    ];
+
+    const DEMO_INVENTORY = [
+      {sku:'CEC-GRE-9X12-001',design:'CECIL GREEN',size:'9X12',location:'UP',opening:15,sold:1,current:14,image:'',imageFile:''},
+      {sku:'IKA-BRO-8X10-192',design:'IKAT BROWN',size:'8X10',location:'UP',opening:6,sold:1,current:5,image:'',imageFile:''}
+    ];
+
+    const DEMO_ADS = [
+      {id:1,name:'US Sponsored Keywords: Amazon Sales',spend:1200,sales:4200,impressions:25000,clicks:1200,conversions:85,status:'GREAT'},
+      {id:2,name:'Etsy Handcrafted Direct Campaigns',spend:450,sales:820,impressions:12000,clicks:740,conversions:32,status:'LOW CONV'}
+    ];
+
+    const DEMO_TASKS = [
+      {id:1,title:'Reconcile pending Amazon orders status log',assignee:'Suraj',priority:'High',dueDate:'2026-07-15',progress:60,status:'In Progress'},
+      {id:2,title:'Verify stock limits for IKAT series',assignee:'Sushant',priority:'Medium',dueDate:'2026-07-20',progress:100,status:'Done'}
+    ];
+
+    const DEMO_RESOURCES = [
+      {id:1,name:'ImgBB Asset Host',url:'https://imgbb.com/',logoUrl:'https://logo.clearbit.com/imgbb.com'},
+      {id:2,name:'Postimages Hosting Direct',url:'https://postimages.org/',logoUrl:'https://logo.clearbit.com/postimages.org'}
+    ];
+
+    // Sub-tab State Identifier
+    let activeAttendanceSubtab = 'mark';
+
+    function toggleAttendanceSubtab(subtabId) {
+      activeAttendanceSubtab = subtabId;
+      document.getElementById('attendance-subtab-mark').style.display = subtabId === 'mark' ? 'block' : 'none';
+      document.getElementById('attendance-subtab-week').style.display = subtabId === 'week' ? 'block' : 'none';
+      document.getElementById('attendance-subtab-month').style.display = subtabId === 'month' ? 'block' : 'none';
+
+      // Style active sub-tabs
+      const markBtn = document.getElementById('subtab-mark-btn');
+      const weekBtn = document.getElementById('subtab-week-btn');
+      const monthBtn = document.getElementById('subtab-month-btn');
+
+      [markBtn, weekBtn, monthBtn].forEach(b => {
+        b.style.backgroundColor = 'transparent';
+        b.style.color = 'var(--text-light)';
+        b.style.fontWeight = '500';
+      });
+
+      const activeBtn = document.getElementById(`subtab-${subtabId}-btn`);
+      if (activeBtn) {
+        activeBtn.style.backgroundColor = 'var(--card)';
+        activeBtn.style.color = 'var(--primary-light)';
+        activeBtn.style.fontWeight = '700';
+      }
+
+      if (subtabId === 'week') {
+        renderWeeklyMatrix();
+      }
+    }
+
+    // LOCAL DATE FORMATTING UTILITY (Safe from UTC midnight gaps)
+    function getLocalDateString() {
+      const d = new Date();
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // RESOLVE ACTIVE CALENDAR WEEK (Mon - Sun based on Wed July 8, 2026 context)
+    function getCurrentWeekDates() {
+      const today = new Date('2026-07-08'); // Current runtime context benchmark
+      const currentDay = today.getDay(); // 3 (Wednesday)
+      const distanceToMonday = currentDay === 0 ? -6 : 1 - currentDay;
+      const monday = new Date(today);
+      monday.setDate(today.getDate() + distanceToMonday);
+
+      const dates = [];
+      for (let i = 0; i < 7; i++) {
+        const next = new Date(monday);
+        next.setDate(monday.getDate() + i);
+        dates.push(next.toISOString().substring(0, 10));
+      }
+      return dates;
+    }
+
+    function renderWeeklyMatrix() {
+      const dates = getCurrentWeekDates();
+      const tbody = document.getElementById('weekly-matrix-body');
+      tbody.innerHTML = '';
+
+      // Set date titles in table header columns
+      const headers = document.getElementById('weekly-matrix-headers').children;
+      const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      for (let i = 0; i < 7; i++) {
+        const dateObj = new Date(dates[i]);
+        const dayStr = String(dateObj.getDate()).padStart(2, '0');
+        const monthStr = String(dateObj.getMonth() + 1).padStart(2, '0');
+        headers[i + 1].innerHTML = `<div style="font-size:10px;">${dayNames[i]}</div><div style="font-size:9px; color:var(--text-light);">${dayStr}/${monthStr}</div>`;
+      }
+
+      appState.employees.forEach(emp => {
+        let rowHtml = `<tr><td><strong>${emp.name}</strong></td>`;
+        
+        dates.forEach(dt => {
+          // Find latest check actions for specific day
+          const dayLogs = (appState.attendance || []).filter(l => l.name === emp.name && l.date === dt);
+          if (dayLogs.length === 0) {
+            rowHtml += `<td style="text-align:center;"><span style="color:var(--text-light); opacity:0.4;">-</span></td>`;
+          } else {
+            const latest = dayLogs[0]; // Filter processes newest to oldest
+            let icon = '';
+            if (latest.action === 'Check-Out') {
+              icon = `<i class="fa-solid fa-door-open text-amber-500" title="Checked Out at ${latest.time}"></i>`;
+            } else if (latest.status.includes('Office')) {
+              icon = `<i class="fa-solid fa-building text-emerald-500" title="Office: Checked In at ${latest.time}"></i>`;
+            } else if (latest.status.includes('WFH')) {
+              icon = `<i class="fa-solid fa-house-laptop text-indigo-500" title="WFH: Checked In at ${latest.time}"></i>`;
+            } else {
+              icon = `<i class="fa-solid fa-plane-departure text-rose-500" title="${latest.status}"></i>`;
+            }
+            rowHtml += `<td style="text-align:center;">${icon}</td>`;
+          }
+        });
+
+        rowHtml += `</tr>`;
+        tbody.innerHTML += rowHtml;
+      });
+    }
+
+    function downloadWeeklyAttendance() {
+      const dates = getCurrentWeekDates();
+      const logs = appState.attendance || [];
+      const weekLogs = logs.filter(l => l.date >= dates[0] && l.date <= dates[6]);
+
+      if (weekLogs.length === 0) {
+        pushToast("No attendance entries registered during the active week.", "warning");
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,Date,Employee Name,Action,Status,Time\n";
+      weekLogs.forEach(log => {
+        csvContent += `"${log.date}","${log.name}","${log.action || 'Check-In'}","${log.status}","${log.time}"\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Weekly_Attendance_Report_${dates[0]}_to_${dates[6]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      pushToast("Weekly attendance CSV exported.", "success");
+    }
+
+    function getEmployeeCurrentStatus(name) {
+      const todayStr = getLocalDateString();
+      const todayLogs = (appState.attendance || []).filter(l => l.name === name && l.date === todayStr);
+      if (todayLogs.length === 0) {
+        return { label: 'Not Logged Today', badgeClass: 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300', icon: 'fa-regular fa-circle-question' };
+      }
+      
+      const latestLog = todayLogs[0]; // index 0 is always latest
+      if (latestLog.action === 'Check-In') {
+        return { 
+          label: `Checked In (${latestLog.status.includes('WFH') ? 'WFH' : 'Office'})`, 
+          badgeClass: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400', 
+          icon: 'fa-solid fa-circle-check',
+          time: latestLog.time 
+        };
+      } else {
+        return { 
+          label: 'Checked Out', 
+          badgeClass: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400', 
+          icon: 'fa-solid fa-circle-xmark',
+          time: latestLog.time 
+        };
+      }
+    }
+
+    function updateSelectedEmployeeStatus() {
+      const name = document.getElementById('attendanceEmployeeSelect').value;
+      const statusSpan = document.getElementById('selectedEmployeeStatus');
+      if (!statusSpan) return;
+      if (!name) {
+        statusSpan.innerHTML = '<span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[10px]">No worker selected</span>';
+        return;
+      }
+      const stat = getEmployeeCurrentStatus(name);
+      statusSpan.innerHTML = `<span class="px-2 py-0.5 rounded text-[10px] ${stat.badgeClass}"><i class="${stat.icon}"></i> ${stat.label} ${stat.time ? 'at ' + stat.time : ''}</span>`;
+    }
+
+    // LIFE CYCLE: LOAD INITIAL SYSTEM STATE
+    window.onload = function() {
+      // Configure Theme State on Startup
+      const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+
+      // Resolve Persistent Storage schema checks
+      const localData = localStorage.getItem(STORAGE_KEY);
+      if (localData) {
+        try {
+          appState = JSON.parse(localData);
+          // Self-healing properties for attendance & config schemas
+          if (!appState.attendance) appState.attendance = [];
+          if (!appState.personaConfigs) {
+            appState.personaConfigs = {
+              'Admin': ['dashboard', 'orders', 'returns', 'messages', 'inventory', 'marketplace', 'shipments', 'ads', 'employees', 'history', 'resources', 'access'],
+              'Suraj': ['dashboard', 'orders', 'shipments', 'employees'],
+              'Shivam': ['dashboard', 'messages', 'employees'],
+              'Sushant': ['dashboard', 'inventory', 'employees'],
+              'Mona': ['dashboard', 'ads', 'employees'],
+              'Aditya': ['dashboard', 'marketplace', 'employees'],
+              'Vineeta': ['dashboard', 'orders', 'employees']
+            };
+          }
+          if (!appState.activePersona) appState.activePersona = 'Admin';
+        } catch (e) {
+          console.error("Local schema corrupt, fallback default initialized.");
+          initializeDefaultState();
+        }
+      } else {
+        initializeDefaultState();
+      }
+
+      // Sync local network IP/Location
+      fetchIpMetadata();
+
+      // Setup Keyboard Action hooks
+      setupKeyboardActions();
+
+      // Launch Workspace directly without Phishing Gateway block limits
+      document.getElementById('personaSwapper').value = appState.activePersona;
+      launchSystemWorkspace();
+
+      // Configure Auto Backup schedules every 60 seconds
+      setInterval(() => {
+        saveState();
+      }, 60000);
+    };
+
+    function initializeDefaultState() {
+      // EXACTLY 2 DEFAULT ROW ITEMS TO DEMO DYNAMIC SYSTEM COMPILATIONS
+      appState.orders = [...DEMO_ORDERS];
+      appState.returns = [...DEMO_RETURNS];
+      appState.messages = [...DEMO_MESSAGES];
+      appState.inventory = [...DEMO_INVENTORY];
+      appState.ads = [...DEMO_ADS];
+      appState.tasks = [...DEMO_TASKS];
+      appState.employees = [...INITIAL_EMPLOYEES];
+      appState.resources = [...DEMO_RESOURCES];
+      appState.attendance = [];
+      appState.activePersona = 'Admin';
+      appState.personaConfigs = {
+        'Admin': ['dashboard', 'orders', 'returns', 'messages', 'inventory', 'marketplace', 'shipments', 'ads', 'employees', 'history', 'resources', 'access'],
+        'Suraj': ['dashboard', 'orders', 'shipments', 'employees'],
+        'Shivam': ['dashboard', 'messages', 'employees'],
+        'Sushant': ['dashboard', 'inventory', 'employees'],
+        'Mona': ['dashboard', 'ads', 'employees'],
+        'Aditya': ['dashboard', 'marketplace', 'employees'],
+        'Vineeta': ['dashboard', 'orders', 'employees']
+      };
+      appState.history = [
+        { timestamp: new Date().toISOString(), user: 'SYSTEM', action: 'BOOT', details: 'Dashboard database simulation schema loaded.', ip: ipAddress, location: physicalLocation }
+      ];
+      saveState();
+    }
+
+    function saveState() {
+      // Auto-recalculate real-time inventory balances
+      appState.inventory.forEach(inv => {
+        inv.sold = calculateSoldQtyFromOrders(inv.sku);
+        inv.current = Math.max(0, inv.opening - inv.sold);
+      });
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    }
+
+    function calculateSoldQtyFromOrders(sku) {
+      return appState.orders
+        .filter(o => o.sku === sku && o.status !== 'Canceled')
+        .reduce((sum, curr) => sum + (parseInt(curr.qty) || 0), 0);
+    }
+
+    function addLogTrace(action, details) {
+      const log = {
+        timestamp: new Date().toISOString(),
+        user: `Simulated User: ${appState.activePersona}`,
+        action: action,
+        details: details,
+        ip: ipAddress,
+        location: physicalLocation
+      };
+      appState.history.unshift(log);
+      if (appState.history.length > 200) appState.history.pop();
+      saveState();
+    }
+
+    // ASYNC SERVICE FETCH GEOLOCATION TELEMETRY
+    async function fetchIpMetadata() {
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        if (res.ok) {
+          const data = await res.json();
+          ipAddress = data.ip || '127.0.0.1';
+          physicalLocation = `${data.city || 'Delhi'}, ${data.country_code || 'IN'}`;
+        }
+      } catch (e) {
+        console.warn("Geolocation resolution bypassed.");
+      }
+      document.getElementById('systemDate').innerText = `${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} (${physicalLocation})`;
+    }
+
+    function setupKeyboardActions() {
+      document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+          e.preventDefault();
+          saveState();
+          pushToast("Prototype backup changes synced.", "success");
+          addLogTrace('BACKUP_MANUAL', 'Triggered state serialization save.');
+        }
+        if (e.key === 'Escape') {
+          closeAllActiveModals();
+        }
+      });
+    }
+
+    function closeAllActiveModals() {
+      document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+        backdrop.classList.remove('open');
+      });
+      toggleFilterPanel(false);
+    }
+
+    // CUSTOM ALERTS DIALOGS HANDLERS
+    function triggerCustomConfirm(title, message, onOkCallback) {
+      const confirmModal = document.getElementById('confirmModal');
+      document.getElementById('confirmTitle').innerText = title;
+      document.getElementById('confirmMessage').innerText = message;
+      
+      confirmModal.classList.add('open');
+      
+      const cleanListeners = () => {
+        document.getElementById('confirmOkBtn').onclick = null;
+        document.getElementById('confirmCancelBtn').onclick = null;
+      };
+
+      document.getElementById('confirmOkBtn').onclick = () => {
+        cleanListeners();
+        confirmModal.classList.remove('open');
+        onOkCallback();
+      };
+
+      document.getElementById('confirmCancelBtn').onclick = () => {
+        cleanListeners();
+        confirmModal.classList.remove('open');
+      };
+    }
+
+    function triggerCustomPrompt(title, message, defaultVal, onOkCallback) {
+      const promptModal = document.getElementById('inlinePromptModal');
+      document.getElementById('promptTitle').innerText = title;
+      document.getElementById('promptMessage').innerText = message;
+      
+      const inputEl = document.getElementById('promptInputField');
+      inputEl.value = defaultVal || '';
+      
+      promptModal.classList.add('open');
+      
+      const cleanListeners = () => {
+        document.getElementById('promptOkBtn').onclick = null;
+        document.getElementById('promptCancelBtn').onclick = null;
+      };
+
+      document.getElementById('promptOkBtn').onclick = () => {
+        const val = inputEl.value.trim();
+        cleanListeners();
+        promptModal.classList.remove('open');
+        onOkCallback(val);
+      };
+
+      document.getElementById('promptCancelBtn').onclick = () => {
+        cleanListeners();
+        promptModal.classList.remove('open');
+      };
+    }
+
+    // PERSONA MANAGEMENT / SIMULATOR SWAPPING PIPELINE
+    function swapActiveSimulatedPersona(personaName) {
+      appState.activePersona = personaName;
+      saveState();
+      
+      pushToast(`Simulating profile view: ${personaName}`, "info");
+      addLogTrace('SIMULATOR_SWAP', `Swapped active workspace simulation focus to role: ${personaName}`);
+      
+      launchSystemWorkspace();
+    }
+
+    function launchSystemWorkspace() {
+      // Render simulated visible workspace tabs
+      renderWorkspaceTabs();
+
+      // Launch default allowed simulated tab
+      const allowedTabs = appState.personaConfigs[appState.activePersona] || ['dashboard'];
+      const defaultTab = allowedTabs.length > 0 ? allowedTabs[0] : 'dashboard';
+      switchTab(defaultTab);
+    }
+
+    // NAVIGATION TABS RENDERING & ROUTING
+    const STANDARD_TABS = [
+      { id: 'dashboard', name: 'Dashboard', icon: 'fa-chart-line' },
+      { id: 'orders', name: 'Orders', icon: 'fa-cart-shopping' },
+      { id: 'returns', name: 'Returns', icon: 'fa-rotate-left' },
+      { id: 'messages', name: 'Messages', icon: 'fa-envelope' },
+      { id: 'inventory', name: 'Inventory', icon: 'fa-boxes-stacked' },
+      { id: 'marketplace', name: 'Marketplace', icon: 'fa-shop' },
+      { id: 'shipments', name: 'Shipments', icon: 'fa-truck-fast' },
+      { id: 'ads', name: 'Ads', icon: 'fa-rectangle-ad' },
+      { id: 'employees', name: 'Employees/Tasks', icon: 'fa-users' },
+      { id: 'history', name: 'History', icon: 'fa-clock-rotate-left' },
+      { id: 'resources', name: 'Resources', icon: 'fa-folder-open' },
+      { id: 'access', name: 'Access Control', icon: 'fa-user-lock' }
+    ];
+
+    function renderWorkspaceTabs() {
+      const listContainer = document.getElementById('tabsNavBar');
+      listContainer.innerHTML = '';
+
+      const allowedTabs = appState.personaConfigs[appState.activePersona] || [];
+
+      STANDARD_TABS.forEach(tab => {
+        if (allowedTabs.includes(tab.id)) {
+          const tabLi = document.createElement('li');
+          tabLi.className = `flex-shrink-0`;
+          tabLi.innerHTML = `
+            <button onclick="switchTab('${tab.id}')" id="tab-btn-${tab.id}" class="flex items-center gap-2 px-5 py-3 font-semibold text-xs border-b-2 transition duration-150 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 hover:border-slate-300">
+              <i class="fa-solid ${tab.icon}"></i> ${tab.name}
+            </button>
+          `;
+          listContainer.appendChild(tabLi);
+        }
+      });
+    }
+
+    function switchTab(tabId) {
+      const allowedTabs = appState.personaConfigs[appState.activePersona] || [];
+      if (!allowedTabs.includes(tabId)) {
+        pushToast("Current simulated persona is restricted from viewing that tab.", "error");
+        return;
+      }
+
+      // Hide all sheets
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      // Deselect buttons
+      document.querySelectorAll('#tabsNavBar button').forEach(btn => {
+        btn.classList.remove('border-indigo-600', 'text-indigo-600', 'dark:text-indigo-400');
+        btn.classList.add('border-transparent', 'text-slate-500', 'dark:text-slate-400');
+      });
+
+      // Show targeted view
+      const targetDiv = document.getElementById(`tab-${tabId}`);
+      if (targetDiv) targetDiv.classList.remove('hidden');
+
+      // Style active button
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-transparent', 'text-slate-500', 'dark:text-slate-400');
+        activeBtn.classList.add('border-indigo-600', 'text-indigo-600', 'dark:text-indigo-400');
+      }
+
+      renderSheetViewport(tabId);
+    }
+
+    function renderSheetViewport(tabId) {
+      switch (tabId) {
+        case 'dashboard':
+          renderDashboard();
+          break;
+        case 'orders':
+          renderOrders();
+          break;
+        case 'returns':
+          renderReturns();
+          break;
+        case 'messages':
+          renderMessages();
+          break;
+        case 'inventory':
+          renderInventory();
+          break;
+        case 'marketplace':
+          renderMarketplace();
+          break;
+        case 'shipments':
+          renderShipments();
+          break;
+        case 'ads':
+          renderAds();
+          break;
+        case 'employees':
+          renderEmployeesAndTasks();
+          break;
+        case 'history':
+          renderHistory();
+          break;
+        case 'resources':
+          renderResources();
+          break;
+        case 'access':
+          renderAccessControl();
+          break;
+      }
+    }
+
+    // 1. DASHBOARD VIEW RENDERERS
+    function renderDashboard() {
+      const filteredOrders = appState.orders.filter(o => isRecordInFilters(o.date, o.brand, o.marketplace));
+      const filteredReturns = appState.returns.filter(r => isRecordInFilters(r.returnDate, r.brand, r.marketplace));
+
+      const totalOrdersCount = filteredOrders.length;
+      const totalSalesRevenue = filteredOrders.reduce((acc, curr) => acc + (parseFloat(curr.sales) || 0), 0);
+      const activePendingOrders = filteredOrders.filter(o => o.status === 'Pending').length;
+      const messagesCount = appState.messages.filter(m => m.status === 'Follow-Up').length;
+      const totalSpentAds = appState.ads.reduce((acc, curr) => acc + (parseFloat(curr.spend) || 0), 0);
+      const totalReturnsCount = filteredReturns.length;
+      const delayedShipmentsCount = filteredOrders.filter(o => o.status === 'Hand Over' && !o.tracking).length;
+
+      const kpisHtml = `
+        <div onclick="navigateClickableKpi('orders')" class="card p-3 flex flex-col justify-between card-hover cursor-pointer border-l-4 border-l-indigo-500">
+          <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Current Orders</div>
+          <div class="text-xl font-bold text-slate-800 dark:text-white my-1">${totalOrdersCount}</div>
+          <div class="text-[9px] text-emerald-600 font-bold"><i class="fa-solid fa-circle-info"></i> Manual Logs Ready</div>
+        </div>
+        <div onclick="navigateClickableKpi('orders')" class="card p-3 flex flex-col justify-between card-hover cursor-pointer border-l-4 border-l-emerald-500">
+          <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Revenue Sales</div>
+          <div class="text-xl font-bold text-slate-800 dark:text-white my-1">$${totalSalesRevenue.toLocaleString(undefined, {maximumFractionDigits:0})}</div>
+          <div class="text-[9px] text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> Fresh setup</div>
+        </div>
+        <div onclick="navigateClickableKpi('messages')" class="card p-3 flex flex-col justify-between card-hover cursor-pointer border-l-4 border-l-amber-500">
+          <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Open Inquiries</div>
+          <div class="text-xl font-bold text-slate-800 dark:text-white my-1">${messagesCount}</div>
+          <div class="text-[9px] text-slate-400 font-bold">Clear Inbox</div>
+        </div>
+        <div onclick="navigateClickableKpi('orders')" class="card p-3 flex flex-col justify-between card-hover cursor-pointer border-l-4 border-l-blue-500">
+          <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Pending Orders</div>
+          <div class="text-xl font-bold text-slate-800 dark:text-white my-1">${activePendingOrders}</div>
+          <div class="text-[9px] text-slate-400 font-bold">Awaiting processing</div>
+        </div>
+        <div onclick="navigateClickableKpi('shipments')" class="card p-3 flex flex-col justify-between card-hover cursor-pointer border-l-4 border-l-indigo-600">
+          <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Delayed Deliveries</div>
+          <div class="text-xl font-bold text-slate-800 dark:text-white my-1">${delayedShipmentsCount}</div>
+          <div class="text-[9px] text-emerald-600 font-bold">Overdue dispatch</div>
+        </div>
+        <div onclick="navigateClickableKpi('ads')" class="card p-3 flex flex-col justify-between card-hover cursor-pointer border-l-4 border-l-violet-500">
+          <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Marketing Spend</div>
+          <div class="text-xl font-bold text-slate-800 dark:text-white my-1">$${totalSpentAds.toLocaleString(undefined, {maximumFractionDigits:0})}</div>
+          <div class="text-[9px] text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> Campaigns track</div>
+        </div>
+        <div onclick="navigateClickableKpi('returns')" class="card p-3 flex flex-col justify-between card-hover cursor-pointer border-l-4 border-l-rose-500">
+          <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Active Returns</div>
+          <div class="text-xl font-bold text-slate-800 dark:text-white my-1">${totalReturnsCount}</div>
+          <div class="text-[9px] text-slate-400 font-bold">Refund claims dashboard</div>
+        </div>
+      `;
+      document.getElementById('dashboardKpis').innerHTML = kpisHtml;
+
+      renderDashboardBrandTable(filteredOrders, filteredReturns);
+      renderDashboardAlerts();
+    }
+
+    function navigateClickableKpi(tabId) {
+      const allowedTabs = appState.personaConfigs[appState.activePersona] || [];
+      if (allowedTabs.includes(tabId)) {
+        switchTab(tabId);
+      } else {
+        pushToast("Restricted: Simulated persona is unauthorized to access that view.", "error");
+      }
+    }
+
+    function renderDashboardBrandTable(orders, returns) {
+      const brandStats = {
+        'WA': { orders: 0, units: 0, sales: 0, returns: 0 },
+        'BM(RRP)': { orders: 0, units: 0, sales: 0, returns: 0 },
+        'RBN(PB)': { orders: 0, units: 0, sales: 0, returns: 0 },
+        'WW': { orders: 0, units: 0, sales: 0, returns: 0 },
+        'NS': { orders: 0, units: 0, sales: 0, returns: 0 },
+        'RO': { orders: 0, units: 0, sales: 0, returns: 0 }
+      };
+
+      orders.forEach(o => {
+        if (brandStats[o.brand]) {
+          brandStats[o.brand].orders++;
+          brandStats[o.brand].units += (parseInt(o.qty) || 0);
+          brandStats[o.brand].sales += (parseFloat(o.sales) || 0);
+        }
+      });
+
+      returns.forEach(r => {
+        if (brandStats[r.brand]) {
+          brandStats[r.brand].returns++;
+        }
+      });
+
+      const totalGroupSales = Object.values(brandStats).reduce((a, b) => a + b.sales, 0);
+
+      let brandRows = '';
+      Object.keys(brandStats).forEach(br => {
+        const data = brandStats[br];
+        if (!activeFilters.brands.includes(br)) return; // Filter check
+
+        const share = totalGroupSales > 0 ? ((data.sales / totalGroupSales) * 100).toFixed(1) : 0;
+        brandRows += `
+          <tr>
+            <td><strong>${br}</strong></td>
+            <td>${data.orders}</td>
+            <td>${data.units}</td>
+            <td>$${data.sales.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            <td>${data.returns}</td>
+            <td>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="flex:1; background-color:var(--border); height:6px; border-radius:3px; overflow:hidden;">
+                  <div style="background-color:var(--primary-light); width:${share}%; height:100%;"></div>
+                </div>
+                <span>${share}%</span>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      document.getElementById('dashboardBrandTableBody').innerHTML = brandRows || '<tr><td colspan="6" style="text-align:center;">No data fits selected segment filters.</td></tr>';
+    }
+
+    function renderDashboardAlerts() {
+      const alerts = appState.inventory.filter(item => item.current <= 5);
+      let alertRows = '';
+      alerts.forEach(al => {
+        alertRows += `
+          <tr>
+            <td><code style="font-weight:600;">${al.sku}</code></td>
+            <td>${al.design}</td>
+            <td><span class="badge ${al.current === 0 ? 'badge-red' : 'badge-yellow'}">${al.current} pcs</span></td>
+          </tr>
+        `;
+      });
+      document.getElementById('dashboardAlertsTableBody').innerHTML = alertRows || '<tr><td colspan="3" style="text-align:center; color:var(--success);">🟢 All stock balances are clear.</td></tr>';
+    }
+
+    // 2. ORDERS SHEET WORKSPACE
+    function renderOrders() {
+      const filtered = appState.orders.filter(o => isRecordInFilters(o.date, o.brand, o.marketplace));
+      
+      const filteredIds = filtered.map(o => o.id);
+      selectedOrderIds = selectedOrderIds.filter(id => filteredIds.includes(id));
+
+      const selectAllCb = document.getElementById('selectAllOrders');
+      if (selectAllCb) {
+        selectAllCb.checked = filtered.length > 0 && filtered.every(o => selectedOrderIds.includes(o.id));
+      }
+
+      updateBulkDeleteButtonState();
+
+      let rows = '';
+      filtered.forEach(ord => {
+        const trackingCol = ord.tracking 
+          ? `<div><span class="badge badge-blue">${ord.carrier}: ${ord.tracking}</span></div>` 
+          : `<button class="px-2 py-0.5 bg-slate-600 hover:bg-slate-700 text-white text-[10px] font-bold rounded" onclick="openLogisticsDispatch(${ord.id})"><i class="fa-solid fa-truck"></i> Ship</button>`;
+
+        const isChecked = selectedOrderIds.includes(ord.id) ? 'checked' : '';
+
+        rows += `
+          <tr class="${selectedOrderIds.includes(ord.id) ? 'bg-indigo-50/20 dark:bg-indigo-950/20' : ''}">
+            <td class="text-center">
+              <input type="checkbox" class="order-select-checkbox rounded text-indigo-600 focus:ring-0" data-id="${ord.id}" ${isChecked} onchange="toggleOrderSelection(${ord.id}, this.checked)">
+            </td>
+            <td>${ord.date}</td>
+            <td><strong>${ord.brand}</strong></td>
+            <td>${ord.marketplace}</td>
+            <td>${ord.design}</td>
+            <td>${ord.size}</td>
+            <td><code>${ord.sku}</code></td>
+            <td>${ord.qty}</td>
+            <td>$${parseFloat(ord.sales).toFixed(2)}</td>
+            <td class="editable-cell" onclick="fastToggleOrderStatus(${ord.id}, '${ord.status}')">${getStatusBadge(ord.status)}</td>
+            <td>${trackingCol}</td>
+            <td class="editable-cell" onclick="editInlineRemarks(${ord.id}, 'orders')">${ord.remarks || '<span style="color:var(--text-light); font-style:italic;">None</span>'}</td>
+            <td>
+              <div style="display:flex; gap:4px;">
+                <button class="p-1 text-slate-500 hover:text-indigo-600" onclick="editOrderEntry(${ord.id})"><i class="fa-solid fa-pencil"></i></button>
+                <button class="p-1 text-rose-500 hover:text-rose-700" onclick="deleteOrderAction(${ord.id})"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      document.getElementById('ordersTableBody').innerHTML = rows || '<tr><td colspan="13" style="text-align:center;">No matching order records found.</td></tr>';
+    }
+
+    function toggleOrderSelection(id, isChecked) {
+      if (isChecked) {
+        if (!selectedOrderIds.includes(id)) {
+          selectedOrderIds.push(id);
+        }
+      } else {
+        selectedOrderIds = selectedOrderIds.filter(sid => sid !== id);
+      }
+      renderOrders();
+    }
+
+    function toggleSelectAllOrders(masterCheckbox) {
+      const filtered = appState.orders.filter(o => isRecordInFilters(o.date, o.brand, o.marketplace));
+      if (masterCheckbox.checked) {
+        selectedOrderIds = filtered.map(o => o.id);
+      } else {
+        selectedOrderIds = [];
+      }
+      renderOrders();
+    }
+
+    function updateBulkDeleteButtonState() {
+      const btn = document.getElementById('bulkDeleteBtn');
+      if (btn) {
+        if (selectedOrderIds.length > 0) {
+          btn.style.display = 'inline-flex';
+          btn.innerHTML = `<i class="fa-solid fa-trash mr-1"></i> Delete Selected (${selectedOrderIds.length})`;
+        } else {
+          btn.style.display = 'none';
+        }
+      }
+    }
+
+    function bulkDeleteSelectedOrders() {
+      if (selectedOrderIds.length === 0) return;
+      triggerCustomConfirm(
+        "Bulk Delete Selected", 
+        `Are you sure you want to permanently delete all ${selectedOrderIds.length} selected orders? Associated inventory stocks will be automatically restored.`, 
+        () => {
+          let deleteCount = 0;
+          selectedOrderIds.forEach(id => {
+            const idx = appState.orders.findIndex(o => o.id === id);
+            if (idx !== -1) {
+              const order = appState.orders[idx];
+              if (order.status !== 'Canceled') {
+                const targetSku = appState.inventory.find(i => i.sku === order.sku);
+                if (targetSku) {
+                  targetSku.sold = Math.max(0, (targetSku.sold || 0) - (parseInt(order.qty) || 0));
+                  targetSku.current = Math.max(0, targetSku.opening - targetSku.sold);
+                }
+              }
+              appState.orders.splice(idx, 1);
+              deleteCount++;
+            }
+          });
+          selectedOrderIds = [];
+          pushToast(`Successfully deleted ${deleteCount} selected orders.`, "warning");
+          addLogTrace('ORDER_BULK_DELETE', `Bulk removed ${deleteCount} order records and replenished stock.`, 'WARN');
+          saveState();
+          renderOrders();
+        }
+      );
+    }
+
+    function autoGenerateSkuField() {
+      const design = document.getElementById('orderDesign').value;
+      const size = document.getElementById('orderSize').value;
+      const key = `${design}|${size}`;
+      const skuInput = document.getElementById('orderSku');
+      if (SKU_MAP[key]) {
+        skuInput.value = SKU_MAP[key];
+      } else if (design && size) {
+        const p1 = design.substring(0,3).toUpperCase();
+        const p2 = size.replace(/X/g, '-');
+        skuInput.value = `${p1}-${p2}-GEN`;
+      } else {
+        skuInput.value = '';
+      }
+    }
+
+    function openAddOrderModal() {
+      document.getElementById('orderForm').reset();
+      document.getElementById('orderEditId').value = '';
+      document.getElementById('orderModalTitle').innerText = 'Add New Order';
+      document.getElementById('orderDate').value = getLocalDateString();
+      openModal('orderModal');
+    }
+
+    function editOrderEntry(id) {
+      const ord = appState.orders.find(o => o.id === id);
+      if (!ord) return;
+      document.getElementById('orderEditId').value = ord.id;
+      document.getElementById('orderDate').value = ord.date;
+      document.getElementById('orderBrand').value = ord.brand;
+      document.getElementById('orderMarketplace').value = ord.marketplace;
+      document.getElementById('orderDesign').value = ord.design;
+      document.getElementById('orderSize').value = ord.size;
+      document.getElementById('orderSku').value = ord.sku;
+      document.getElementById('orderQty').value = ord.qty;
+      document.getElementById('orderSales').value = ord.sales;
+      document.getElementById('orderStatus').value = ord.status;
+      document.getElementById('orderCarrier').value = ord.carrier || '';
+      document.getElementById('orderTracking').value = ord.tracking || '';
+      document.getElementById('orderRemarks').value = ord.remarks || '';
+      
+      document.getElementById('orderModalTitle').innerText = 'Modify Order Record';
+      openModal('orderModal');
+    }
+
+    function submitOrderForm() {
+      const id = document.getElementById('orderEditId').value;
+      const ordDate = document.getElementById('orderDate').value;
+      const brand = document.getElementById('orderBrand').value;
+      const marketplace = document.getElementById('orderMarketplace').value;
+      const design = document.getElementById('orderDesign').value;
+      const size = document.getElementById('orderSize').value;
+      const sku = document.getElementById('orderSku').value;
+      const qty = parseInt(document.getElementById('orderQty').value) || 1;
+      const sales = parseFloat(document.getElementById('orderSales').value) || 0;
+      const status = document.getElementById('orderStatus').value;
+      const carrier = document.getElementById('orderCarrier').value;
+      const tracking = document.getElementById('orderTracking').value.trim();
+      const remarks = document.getElementById('orderRemarks').value;
+
+      if (!design || !size) {
+        pushToast("Design and Size options are required.", "error");
+        return;
+      }
+
+      if (id) {
+        const index = appState.orders.findIndex(o => o.id === parseInt(id));
+        if (index !== -1) {
+          appState.orders[index] = { ...appState.orders[index], date: ordDate, brand, marketplace, design, size, sku, qty, sales, status, carrier, tracking, remarks };
+          pushToast("Order record updated.", "success");
+          addLogTrace('ORDER_UPDATE', `Modified Order Entry ID ${id}.`, 'INFO');
+        }
+      } else {
+        const newId = appState.orders.length > 0 ? Math.max(...appState.orders.map(o => o.id)) + 1 : 1;
+        appState.orders.push({
+          id: newId, date: ordDate, brand, marketplace, design, size, sku, qty, sales, status, carrier, tracking, remarks, trackingRemarks: '', pending: 0
+        });
+
+        const targetSku = appState.inventory.find(i => i.sku === sku);
+        if (targetSku && status !== 'Canceled') {
+          targetSku.sold = (targetSku.sold || 0) + qty;
+          targetSku.current = Math.max(0, targetSku.opening - targetSku.sold);
+        }
+
+        pushToast("New order registered.", "success");
+        addLogTrace('ORDER_ADD', `Added Order ID ${newId}, SKU: ${sku}.`, 'INFO');
+      }
+
+      saveState();
+      closeModal('orderModal');
+      renderOrders();
+    }
+
+    function deleteOrderAction(id) {
+      triggerCustomConfirm(
+        "Erase Order Record", 
+        `Are you sure you want to permanently delete Order ID ${id}? This action cannot be undone and will restore its allocated inventory stock.`, 
+        () => {
+          const idx = appState.orders.findIndex(o => o.id === id);
+          if (idx === -1) return;
+
+          const order = appState.orders[idx];
+          if (order.status !== 'Canceled') {
+            const targetSku = appState.inventory.find(i => i.sku === order.sku);
+            if (targetSku) {
+              targetSku.sold = Math.max(0, (targetSku.sold || 0) - (parseInt(order.qty) || 0));
+              targetSku.current = Math.max(0, targetSku.opening - targetSku.sold);
+            }
+          }
+
+          appState.orders.splice(idx, 1);
+          selectedOrderIds = selectedOrderIds.filter(sid => sid !== id);
+          pushToast(`Order ID ${id} deleted successfully.`, "warning");
+          addLogTrace('ORDER_DELETE', `Deleted Order ID ${id} and restored allocated stock.`, 'WARN');
+          saveState();
+          renderOrders();
+        }
+      );
+    }
+
+    // INTERACTIVE TABULAR BULK ORDERS IMPORTER
+    function openTabularBulkOrderModal() {
+      const tbody = document.getElementById('tabularBulkOrderBody');
+      tbody.innerHTML = '';
+      
+      // Load 3 blank spreadsheet-style config rows
+      for (let i = 0; i < 3; i++) {
+        addTabularBulkRow();
+      }
+      openModal('tabularBulkOrderModal');
+    }
+
+    function addTabularBulkRow() {
+      const tbody = document.getElementById('tabularBulkOrderBody');
+      const tr = document.createElement('tr');
+      tr.className = "bulk-order-row";
+      tr.innerHTML = `
+        <td>
+          <select class="spreadsheet-input text-xs row-brand">
+            <option value="WA">WA</option>
+            <option value="BM(RRP)">BM(RRP)</option>
+            <option value="RBN(PB)">RBN(PB)</option>
+            <option value="WW">WW</option>
+            <option value="NS">NS</option>
+            <option value="RO">RO</option>
+          </select>
+        </td>
+        <td>
+          <select class="spreadsheet-input text-xs row-marketplace">
+            <option value="Amazon">Amazon</option>
+            <option value="Etsy">Etsy</option>
+            <option value="Walmart">Walmart</option>
+            <option value="eBay">eBay</option>
+          </select>
+        </td>
+        <td>
+          <select class="spreadsheet-input text-xs row-design">
+            <option value="CECIL GREEN">CECIL GREEN</option>
+            <option value="IKAT BROWN">IKAT BROWN</option>
+            <option value="IKAT PINK">IKAT PINK</option>
+            <option value="ADELINE MULTI">ADELINE MULTI</option>
+            <option value="EVA MULTI">EVA MULTI</option>
+            <option value="ELHAM">ELHAM</option>
+          </select>
+        </td>
+        <td>
+          <select class="spreadsheet-input text-xs row-size">
+            <option value="9X12">9X12</option>
+            <option value="8X10">8X10</option>
+            <option value="6X8">6X8</option>
+            <option value="5X8">5X8</option>
+            <option value="4X6">4X6</option>
+            <option value="3X5">3X5</option>
+            <option value="2.6X7">2.6X7</option>
+          </select>
+        </td>
+        <td>
+          <input type="number" class="spreadsheet-input text-xs row-qty" value="1" min="1">
+        </td>
+        <td>
+          <input type="number" class="spreadsheet-input text-xs row-sales" value="0" min="0">
+        </td>
+        <td>
+          <select class="spreadsheet-input text-xs row-status">
+            <option value="Pending">Pending</option>
+            <option value="In Process">In Process</option>
+            <option value="Hand Over">Hand Over</option>
+            <option value="Delivered">Delivered</option>
+          </select>
+        </td>
+        <td>
+          <button onclick="this.closest('tr').remove()" class="text-rose-600 hover:text-rose-800 p-1"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    function submitTabularBulkOrders() {
+      const rows = document.querySelectorAll('.bulk-order-row');
+      if (rows.length === 0) {
+        pushToast("No bulk orders to commit.", "warning");
+        return;
+      }
+
+      let importCount = 0;
+      rows.forEach(row => {
+        const brand = row.querySelector('.row-brand').value;
+        const marketplace = row.querySelector('.row-marketplace').value;
+        const design = row.querySelector('.row-design').value;
+        const size = row.querySelector('.row-size').value;
+        const qty = parseInt(row.querySelector('.row-qty').value) || 1;
+        const sales = parseFloat(row.querySelector('.row-sales').value) || 0;
+        const status = row.querySelector('.row-status').value;
+
+        // Auto map SKU
+        const key = `${design}|${size}`;
+        const sku = SKU_MAP[key] || `GEN-${design.substring(0,3).toUpperCase()}-${size.replace(/X/g,'-')}`;
+
+        const newId = appState.orders.length > 0 ? Math.max(...appState.orders.map(o => o.id)) + 1 : 1;
+        
+        appState.orders.push({
+          id: newId,
+          date: getLocalDateString(),
+          brand, marketplace, design, size, sku, qty, sales, status,
+          tracking: '', carrier: '', trackingRemarks: '', remarks: 'Tabular bulk import'
+        });
+
+        // Deduct Inventory
+        const targetSku = appState.inventory.find(i => i.sku === sku);
+        if (targetSku && status !== 'Canceled') {
+          targetSku.sold = (targetSku.sold || 0) + qty;
+          targetSku.current = Math.max(0, targetSku.opening - targetSku.sold);
+        }
+
+        importCount++;
+      });
+
+      saveState();
+      closeModal('tabularBulkOrderModal');
+      renderOrders();
+      pushToast(`Imported ${importCount} order records successfully.`, "success");
+      addLogTrace('BULK_TABULAR_ADD', `Committed ${importCount} simulated orders bulk matrix rows.`);
+    }
+
+    function fastToggleOrderStatus(id, currentStatus) {
+      const order = appState.orders.find(o => o.id === id);
+      if (!order) return;
+      
+      const nextStatusMap = {
+        'Pending': 'In Process',
+        'In Process': 'Hand Over',
+        'Hand Over': 'Delivered',
+        'Delivered': 'Canceled',
+        'Canceled': 'Pending'
+      };
+
+      const originalStatus = currentStatus;
+      const next = nextStatusMap[currentStatus] || 'Pending';
+      order.status = next;
+
+      // Handle inventory triggers
+      if (next === 'Canceled' && originalStatus !== 'Canceled') {
+        const inv = appState.inventory.find(i => i.sku === order.sku);
+        if (inv) {
+          inv.sold = Math.max(0, inv.sold - order.qty);
+          inv.current = inv.opening - inv.sold;
+        }
+      } else if (originalStatus === 'Canceled' && next !== 'Canceled') {
+        const inv = appState.inventory.find(i => i.sku === order.sku);
+        if (inv) {
+          inv.sold += order.qty;
+          inv.current = Math.max(0, inv.opening - inv.sold);
+        }
+      }
+
+      pushToast(`Status adjusted: ${next}`, "info");
+      addLogTrace('ORDER_STATUS_TOGGLE', `Order ID ${id} set to ${next}.`);
+      saveState();
+      renderOrders();
+    }
+
+    function editInlineRemarks(id, type) {
+      const target = appState[type].find(x => x.id === id);
+      if (!target) return;
+      
+      const currentVal = target.remarks || target.notes || '';
+      triggerCustomPrompt("Edit Remarks", "Enter brief updated details notes for selected entry:", currentVal, (newVal) => {
+        if (newVal === null) return;
+        if (type === 'orders') {
+          target.remarks = newVal;
+        } else if (type === 'returns') {
+          target.notes = newVal;
+        }
+
+        pushToast("Notes updated.", "success");
+        addLogTrace('INLINE_EDIT', `Modified remarks on ${type} associated record ID ${id}.`);
+        saveState();
+        renderSheetViewport(type);
+      });
+    }
+
+    // 3. RETURNS SHEET COMPONENT
+    function renderReturns() {
+      const filtered = appState.returns.filter(r => isRecordInFilters(r.returnDate, r.brand, r.marketplace));
+      let rows = '';
+      filtered.forEach(ret => {
+        rows += `
+          <tr>
+            <td>${ret.returnDate}</td>
+            <td><strong>${ret.brand}</strong></td>
+            <td>${ret.marketplace}</td>
+            <td><code>${ret.orderId}</code></td>
+            <td>${ret.design}</td>
+            <td>${ret.size}</td>
+            <td>${ret.reason}</td>
+            <td class="editable-cell" onclick="toggleReturnStatus(${ret.id}, '${ret.status}')">${getStatusBadge(ret.status)}</td>
+            <td class="text-rose-600 font-bold">$${parseFloat(ret.refundAmount).toFixed(2)}</td>
+            <td class="editable-cell" onclick="editInlineRemarks(${ret.id}, 'returns')">${ret.notes || '<span style="color:var(--text-light); font-style:italic;">None</span>'}</td>
+            <td>
+              <button class="p-1 text-slate-500 hover:text-indigo-600" onclick="editReturnEntry(${ret.id})"><i class="fa-solid fa-pencil"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+      document.getElementById('returnsTableBody').innerHTML = rows || '<tr><td colspan="11" style="text-align:center;">No returns cases matched active search parameters.</td></tr>';
+    }
+
+    function openAddReturnModal() {
+      document.getElementById('returnForm').reset();
+      document.getElementById('returnEditId').value = '';
+      document.getElementById('returnDate').value = getLocalDateString();
+      document.getElementById('returnModalTitle').innerText = 'Add Return Entry Case';
+      openModal('returnModal');
+    }
+
+    function editReturnEntry(id) {
+      const ret = appState.returns.find(r => r.id === id);
+      if (!ret) return;
+      document.getElementById('returnEditId').value = ret.id;
+      document.getElementById('returnOrderId').value = ret.orderId;
+      document.getElementById('returnDate').value = ret.returnDate;
+      document.getElementById('returnBrand').value = ret.brand;
+      document.getElementById('returnMarketplace').value = ret.marketplace;
+      document.getElementById('returnDesign').value = ret.design;
+      document.getElementById('returnSize').value = ret.size;
+      document.getElementById('returnReason').value = ret.reason;
+      document.getElementById('returnStatus').value = ret.status;
+      document.getElementById('returnRefund').value = ret.refundAmount;
+      document.getElementById('returnNotes').value = ret.notes || '';
+
+      document.getElementById('returnModalTitle').innerText = 'Modify Return Details';
+      openModal('returnModal');
+    }
+
+    function submitReturnForm() {
+      const id = document.getElementById('returnEditId').value;
+      const orderId = document.getElementById('returnOrderId').value;
+      const retDate = document.getElementById('returnDate').value;
+      const brand = document.getElementById('returnBrand').value;
+      const marketplace = document.getElementById('returnMarketplace').value;
+      const design = document.getElementById('returnDesign').value;
+      const size = document.getElementById('returnSize').value;
+      const reason = document.getElementById('returnReason').value;
+      const status = document.getElementById('returnStatus').value;
+      const refund = parseFloat(document.getElementById('returnRefund').value) || 0;
+      const notes = document.getElementById('returnNotes').value;
+
+      if (!orderId || !design || !size) {
+        pushToast("Order ID, Design name and Dimension sizes are required fields.", "error");
+        return;
+      }
+
+      if (id) {
+        const idx = appState.returns.findIndex(r => r.id === parseInt(id));
+        if (idx !== -1) {
+          appState.returns[idx] = { ...appState.returns[idx], orderId, returnDate: retDate, brand, marketplace, design, size, reason, status, refundAmount: refund, notes };
+          pushToast("Return data updated.", "success");
+          addLogTrace('RETURN_UPDATE', `Modified return record ID ${id}.`, 'INFO');
+        }
+      } else {
+        const newId = appState.returns.length > 0 ? Math.max(...appState.returns.map(r => r.id)) + 1 : 1;
+        appState.returns.push({
+          id: newId, orderId, returnDate: retDate, brand, marketplace, design, size, reason, status, refundAmount: refund, notes
+        });
+        pushToast("Refund case recorded.", "success");
+        addLogTrace('RETURN_ADD', `Logged Return ID ${newId}.`, 'INFO');
+      }
+
+      saveState();
+      closeModal('returnModal');
+      renderReturns();
+    }
+
+    function toggleReturnStatus(id, currentStatus) {
+      const ret = appState.returns.find(r => r.id === id);
+      if (!ret) return;
+      const nextMap = {
+        'Return Received': 'Refund Processed',
+        'Refund Processed': 'Rejected',
+        'Rejected': 'Return Received'
+      };
+      ret.status = nextMap[currentStatus] || 'Return Received';
+      pushToast(`Return Status set: ${ret.status}`, "info");
+      addLogTrace('RETURN_STATUS_TOGGLE', `Modified return entry ${id} state.`);
+      saveState();
+      renderReturns();
+    }
+
+    function exportReturnsToCSV() {
+      let csvContent = "data:text/csv;charset=utf-8,Return Date,Brand,Marketplace,Order ID,Design,Size,Reason,Status,Refund Amount,Notes\n";
+      appState.returns.forEach(r => {
+        csvContent += `"${r.returnDate}","${r.brand}","${r.marketplace}","${r.orderId}","${r.design}","${r.size}","${r.reason}","${r.status}","${r.refundAmount}","${r.notes || ''}"\n`;
+      });
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `returns_report_${getLocalDateString()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      pushToast("CSV Export downloaded.", "success");
+    }
+
+    // 4. MESSAGES SHEET COMPONENT
+    function renderMessages() {
+      let rows = '';
+      appState.messages.forEach(msg => {
+        if (!activeFilters.brands.includes(msg.brand)) return;
+
+        rows += `
+          <tr>
+            <td>${msg.date}</td>
+            <td><strong>${msg.brand}</strong></td>
+            <td>${msg.customer}</td>
+            <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${msg.message}">${msg.message}</td>
+            <td><span class="badge ${msg.priority === 'High' ? 'badge-red' : msg.priority === 'Medium' ? 'badge-yellow' : 'badge-gray'}">${msg.priority}</span></td>
+            <td class="editable-cell" onclick="toggleMessageStatus(${msg.id}, '${msg.status}')">${getStatusBadge(msg.status)}</td>
+            <td>${msg.handledBy || '<span style="color:var(--text-light);">Unassigned</span>'}</td>
+            <td>
+              <button class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg" onclick="openReplyModal(${msg.id})"><i class="fa-solid fa-reply"></i> Reply</button>
+            </td>
+          </tr>
+        `;
+      });
+      document.getElementById('messagesTableBody').innerHTML = rows || '<tr><td colspan="8" style="text-align:center;">Inbox is completely clean! No messages found.</td></tr>';
+    }
+
+    function toggleMessageStatus(id, currentStatus) {
+      const msg = appState.messages.find(m => m.id === id);
+      if (!msg) return;
+      msg.status = currentStatus === 'Resolved' ? 'Follow-Up' : 'Resolved';
+      pushToast(`Status set to: ${msg.status}`, "info");
+      addLogTrace('MESSAGE_STATUS', `Toggled support ticket ID ${id} status to ${msg.status}`);
+      saveState();
+      renderMessages();
+    }
+
+    function openReplyModal(id) {
+      const msg = appState.messages.find(m => m.id === id);
+      if (!msg) return;
+      document.getElementById('replyMsgId').value = msg.id;
+      document.getElementById('replyCustomerName').innerText = `To Customer: ${msg.customer} (${msg.brand})`;
+      document.getElementById('replyOriginalText').innerText = msg.message;
+      document.getElementById('replyMsgText').value = '';
+      
+      const select = document.getElementById('replyAgent');
+      select.innerHTML = '';
+      appState.employees.forEach(e => {
+        select.innerHTML += `<option value="${e.name}">${e.name}</option>`;
+      });
+
+      document.getElementById('replyAgent').value = msg.handledBy || appState.employees[0].name;
+      document.getElementById('replyStatus').value = msg.status;
+      openModal('messageModal');
+    }
+
+    function submitMessageReply() {
+      const id = parseInt(document.getElementById('replyMsgId').value);
+      const msgText = document.getElementById('replyMsgText').value.trim();
+      const agent = document.getElementById('replyAgent').value;
+      const status = document.getElementById('replyStatus').value;
+
+      if (!msgText) {
+        pushToast("Reply text content cannot be blank.", "error");
+        return;
+      }
+
+      const msg = appState.messages.find(m => m.id === id);
+      if (msg) {
+        msg.status = status;
+        msg.handledBy = agent;
+        pushToast("Customer reply recorded.", "success");
+        addLogTrace('MESSAGE_REPLY', `Responded to ${msg.customer}. Agent: ${agent}.`);
+      }
+
+      saveState();
+      closeModal('messageModal');
+      renderMessages();
+    }
+
+    // 5. INVENTORY STOCK WORKSPACE
+    function renderInventory() {
+      const query = document.getElementById('inventorySearch').value.toLowerCase().trim();
+      let rows = '';
+
+      appState.inventory.forEach(inv => {
+        if (query && !inv.design.toLowerCase().includes(query) && !inv.sku.toLowerCase().includes(query)) return;
+
+        let statusBadge = '';
+        if (inv.current > 5) {
+          statusBadge = '<span class="badge badge-green">🟢 In Stock</span>';
+        } else if (inv.current > 0) {
+          statusBadge = '<span class="badge badge-yellow">🟡 Low Stock</span>';
+        } else {
+          statusBadge = '<span class="badge badge-red">🔴 Out of Stock</span>';
+        }
+
+        const imgRender = inv.imageFile || inv.image
+          ? `<img class="img-thumbnail" src="${inv.imageFile || inv.image}" alt="SKU Visual" onerror="this.src='https://placehold.co/40x40/1a5276/ffffff?text=Err'" onclick="triggerSkuImageChange('${inv.sku}')">`
+          : `<div class="w-10 h-10 rounded border border-slate-200 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 flex items-center justify-center text-slate-400 cursor-pointer text-xs" onclick="triggerSkuImageChange('${inv.sku}')"><i class="fa-solid fa-camera"></i></div>`;
+
+        rows += `
+          <tr>
+            <td>${imgRender}</td>
+            <td><strong>${inv.design}</strong></td>
+            <td><code>${inv.sku}</code></td>
+            <td>${inv.location}</td>
+            <td>${inv.size}</td>
+            <td>${inv.opening}</td>
+            <td>${inv.sold}</td>
+            <td><strong>${inv.current} pcs</strong></td>
+            <td>${statusBadge}</td>
+            <td>
+              <div style="display:flex; align-items:center; gap:4px;">
+                <button class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded text-xs font-bold" onclick="adjustInvStock('${inv.sku}', -1)">-1</button>
+                <button class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded text-xs font-bold" onclick="adjustInvStock('${inv.sku}', 1)">+1</button>
+                <button class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded text-xs font-bold" onclick="adjustInvStock('${inv.sku}', 5)">+5</button>
+                <button class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded text-xs font-bold" onclick="adjustInvStock('${inv.sku}', -5)">-5</button>
+              </div>
+            </td>
+            <td>
+              <button class="p-1 text-rose-500 hover:text-rose-700" onclick="deleteSkuRecord('${inv.sku}')"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('inventoryTableBody').innerHTML = rows || '<tr><td colspan="11" style="text-align:center;">No matching inventory listings found.</td></tr>';
+    }
+
+    function adjustInvStock(sku, delta) {
+      const inv = appState.inventory.find(i => i.sku === sku);
+      if (!inv) return;
+      
+      const newOpening = Math.max(0, inv.opening + delta);
+      inv.opening = newOpening;
+      inv.current = Math.max(0, inv.opening - inv.sold);
+      
+      saveState();
+      renderInventory();
+      pushToast(`Stock updated for ${sku}.`, "success");
+      addLogTrace('STOCK_ADJUST', `Adjusted SKU ${sku} opening count by ${delta}.`);
+    }
+
+    function triggerSkuImageChange(sku) {
+      const inv = appState.inventory.find(i => i.sku === sku);
+      if (!inv) return;
+      document.getElementById('imgSkuTarget').value = sku;
+      document.getElementById('skuImgUrl').value = inv.image || '';
+      document.getElementById('skuFileAsset').value = '';
+      openModal('skuImageModal');
+    }
+
+    // ASYNC HIGH-RELIABILITY FILE TO BASE64 UTILITY PIPELINE
+    function readFileInputAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function submitSkuImage() {
+      const sku = document.getElementById('imgSkuTarget').value;
+      const url = document.getElementById('skuImgUrl').value.trim();
+      const fileInput = document.getElementById('skuFileAsset');
+      const file = fileInput.files[0];
+
+      const inv = appState.inventory.find(i => i.sku === sku);
+      if (!inv) return;
+
+      if (file) {
+        try {
+          const base64 = await readFileInputAsBase64(file);
+          inv.imageFile = base64;
+          inv.image = '';
+          pushToast("Asset file image associated successfully.", "success");
+          addLogTrace('IMAGE_CHANGE', `Uploaded base64 graphics for SKU ${sku}`);
+        } catch (e) {
+          pushToast("Failed to process file image asset.", "error");
+          return;
+        }
+      } else if (url) {
+        inv.image = url;
+        inv.imageFile = '';
+        pushToast("Web URL associated successfully.", "success");
+        addLogTrace('IMAGE_CHANGE', `Associated URL graphics for SKU ${sku}`);
+      }
+
+      saveState();
+      closeModal('skuImageModal');
+      renderInventory();
+    }
+
+    function removeSkuImage() {
+      const sku = document.getElementById('imgSkuTarget').value;
+      const inv = appState.inventory.find(i => i.sku === sku);
+      if (inv) {
+        inv.image = '';
+        inv.imageFile = '';
+        pushToast("Product image removed.", "warning");
+        addLogTrace('IMAGE_REMOVE', `Removed asset graphics of SKU ${sku}`);
+      }
+      saveState();
+      closeModal('skuImageModal');
+      renderInventory();
+    }
+
+    function openAddSkuModal() {
+      document.getElementById('skuForm').reset();
+      openModal('skuModal');
+    }
+
+    function submitSkuForm() {
+      const design = document.getElementById('skuDesign').value.toUpperCase().trim();
+      const size = document.getElementById('skuSize').value.toUpperCase().trim();
+      const sku = document.getElementById('skuCode').value.trim();
+      const location = document.getElementById('skuLocation').value.toUpperCase().trim();
+      const opening = parseInt(document.getElementById('skuOpening').value) || 0;
+
+      if (!design || !sku) {
+        pushToast("Design and SKU Code fields are required.", "error");
+        return;
+      }
+
+      const duplicate = appState.inventory.find(i => i.sku === sku);
+      if (duplicate) {
+        pushToast("SKU already defined in database.", "error");
+        return;
+      }
+
+      appState.inventory.push({
+        sku, design, size, opening, sold: 0, current: opening, location, image: '', imageFile: ''
+      });
+
+      pushToast(`SKU ${sku} registered.`, "success");
+      addLogTrace('SKU_ADD', `Added SKU ${sku} into Master Inventory.`);
+      saveState();
+      closeModal('skuModal');
+      renderInventory();
+    }
+
+    function deleteSkuRecord(sku) {
+      triggerCustomConfirm("Erase SKU Record", `Are you sure you want to delete SKU code ${sku}? This action cannot be undone.`, () => {
+        const idx = appState.inventory.findIndex(i => i.sku === sku);
+        if (idx === -1) return;
+        appState.inventory.splice(idx, 1);
+        pushToast("SKU dropped.", "warning");
+        addLogTrace('SKU_DELETE', `Dropped SKU ${sku}.`);
+        saveState();
+        renderInventory();
+      });
+    }
+
+    function exportInventoryCSV() {
+      let csv = "data:text/csv;charset=utf-8,SKU,Design,Size,Opening,Sold,Current,Location\n";
+      appState.inventory.forEach(i => {
+        csv += `"${i.sku}","${i.design}","${i.size}",${i.opening},${i.sold},${i.current},"${i.location}"\n`;
+      });
+      const encodedUri = encodeURI(csv);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `inventory_master_${getLocalDateString()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      pushToast("Inventory CSV exported.", "success");
+    }
+
+    function importInventoryCSV(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const text = e.target.result;
+        const lines = text.split('\n');
+        let imported = 0;
+        let skipped = 0;
+
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (!line) continue;
+          
+          const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+          if (parts.length >= 7) {
+            const sku = parts[0].replace(/"/g, '').trim();
+            const design = parts[1].replace(/"/g, '').trim();
+            const size = parts[2].replace(/"/g, '').trim();
+            const opening = parseInt(parts[3]) || 0;
+            const sold = parseInt(parts[4]) || 0;
+            const current = parseInt(parts[5]) || 0;
+            const location = parts[6].replace(/"/g, '').trim();
+
+            const existingIdx = appState.inventory.findIndex(inv => inv.sku === sku);
+            if (existingIdx !== -1) {
+              appState.inventory[existingIdx] = { ...appState.inventory[existingIdx], design, size, opening, sold, current, location };
+            } else {
+              appState.inventory.push({ sku, design, size, opening, sold, current, location, image: '', imageFile: '' });
+            }
+            imported++;
+          } else {
+            skipped++;
+          }
+        }
+
+        saveState();
+        renderInventory();
+        pushToast(`CSV Upload processed: Saved ${imported}, skipped ${skipped}.`, "success");
+        addLogTrace('INVENTORY_IMPORT', `CSV Upload processed ${imported} records.`);
+      };
+      reader.readAsText(file);
+    }
+
+    // 6. MARKETPLACE PERFORMANCE SHEET
+    function renderMarketplace() {
+      const platforms = ['Amazon', 'Etsy', 'Walmart', 'eBay'];
+      let rows = '';
+
+      platforms.forEach(pt => {
+        if (!activeFilters.marketplaces.includes(pt)) return;
+
+        const pOrders = appState.orders.filter(o => o.marketplace === pt && isRecordInFilters(o.date, o.brand, o.marketplace));
+        const pReturns = appState.returns.filter(r => r.marketplace === pt && isRecordInFilters(r.returnDate, r.brand, r.marketplace));
+        const salesRevenue = pOrders.reduce((sum, curr) => sum + (parseFloat(curr.sales) || 0), 0);
+        
+        const mockRatingMap = { 'Amazon': 4.5, 'Etsy': 4.8, 'Walmart': 4.1, 'eBay': 4.6 };
+        const score = mockRatingMap[pt] || 4.5;
+
+        rows += `
+          <tr>
+            <td><strong>${pt} Platform</strong></td>
+            <td>${pOrders.length} orders</td>
+            <td><strong>$${salesRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong></td>
+            <td><span class="badge badge-yellow">${pReturns.length} returns cases</span></td>
+            <td>
+              <div style="color: #f1c40f; display:flex; gap: 4px; align-items:center;">
+                <i class="fa-solid fa-star"></i>
+                <span style="font-weight:600; color:var(--text);">${score} / 5.0</span>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('marketplaceTableBody').innerHTML = rows || '<tr><td colspan="5" style="text-align:center;">No platform marketplaces selected.</td></tr>';
+    }
+
+    // 7. SHIPMENTS SHEET
+    function renderShipments() {
+      const trackedOrders = appState.orders.filter(o => o.tracking && isRecordInFilters(o.date, o.brand, o.marketplace));
+      let rows = '';
+
+      trackedOrders.forEach(ord => {
+        rows += `
+          <tr>
+            <td>${ord.date}</td>
+            <td><code>${ord.sku}</code></td>
+            <td><strong>${ord.carrier}</strong></td>
+            <td><code>${ord.tracking}</code></td>
+            <td>${getStatusBadge(ord.status)}</td>
+            <td class="editable-cell" onclick="editInlineShipmentRemarks(${ord.id})">${ord.trackingRemarks || '<span style="color:var(--text-light); font-style:italic;">Add notes</span>'}</td>
+            <td>
+              <button class="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold rounded" onclick="markOrderDelivered(${ord.id})"><i class="fa-solid fa-circle-check"></i> Complete</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('shipmentsTableBody').innerHTML = rows || '<tr><td colspan="7" style="text-align:center;">No active tracked packages found.</td></tr>';
+    }
+
+    function openLogisticsDispatch(id) {
+      document.getElementById('shipOrderId').value = id;
+      document.getElementById('shipTracking').value = '';
+      document.getElementById('shipRemarks').value = '';
+      openModal('shipModal');
+    }
+
+    function submitLogisticsDispatch() {
+      const orderId = parseInt(document.getElementById('shipOrderId').value);
+      const carrier = document.getElementById('shipCarrier').value;
+      const tracking = document.getElementById('shipTracking').value.trim();
+      const remarks = document.getElementById('shipRemarks').value.trim();
+
+      if (!tracking) {
+        pushToast("Tracking number reference code is required.", "error");
+        return;
+      }
+
+      const ord = appState.orders.find(o => o.id === orderId);
+      if (ord) {
+        ord.carrier = carrier;
+        ord.tracking = tracking;
+        ord.trackingRemarks = remarks;
+        ord.status = 'Hand Over'; // Advance state
+        
+        pushToast(`Dispatched package via ${carrier}.`, "success");
+        addLogTrace('SHIPMENT_DISPATCH', `Dispatched Order ID ${orderId} via ${carrier}. Tracking: ${tracking}`);
+      }
+
+      saveState();
+      closeModal('shipModal');
+      renderOrders();
+    }
+
+    function markOrderDelivered(id) {
+      const ord = appState.orders.find(o => o.id === id);
+      if (ord) {
+        ord.status = 'Delivered';
+        pushToast(`Shipment for Order ${id} is marked Delivered.`, "success");
+        addLogTrace('DELIVERY_CONFIRM', `Marked Order ID ${id} as Delivered.`);
+      }
+      saveState();
+      renderShipments();
+    }
+
+    function editInlineShipmentRemarks(id) {
+      const ord = appState.orders.find(o => o.id === id);
+      if (!ord) return;
+
+      const currentVal = ord.trackingRemarks || '';
+      triggerCustomPrompt("Edit Remarks", "Update logistics/shipment internal notes:", currentVal, (newVal) => {
+        if (newVal === null) return;
+        ord.trackingRemarks = newVal;
+        pushToast("Remarks updated.", "success");
+        saveState();
+        renderShipments();
+      });
+    }
+
+    // 8. ADS VIEW
+    function renderAds() {
+      let rows = '';
+      appState.ads.forEach(ad => {
+        const roas = ad.spend > 0 ? (ad.sales / ad.spend).toFixed(2) : '0.00';
+        const acos = ad.sales > 0 ? ((ad.spend / ad.sales) * 100).toFixed(1) : '0.0';
+
+        let perfBadge = '';
+        if (parseFloat(roas) >= 3.0) {
+          perfBadge = '<span class="badge badge-green"><i class="fa-solid fa-crown"></i> GREAT</span>';
+        } else if (parseFloat(acos) > 40) {
+          perfBadge = '<span class="badge badge-red"><i class="fa-solid fa-circle-exclamation"></i> HIGH ACOS</span>';
+        } else {
+          perfBadge = '<span class="badge badge-yellow"><i class="fa-solid fa-triangle-exclamation"></i> LOW CONV</span>';
+        }
+
+        rows += `
+          <tr>
+            <td><strong>${ad.name}</strong></td>
+            <td>$${ad.spend.toLocaleString()}</td>
+            <td>$${ad.sales.toLocaleString()}</td>
+            <td>${ad.impressions.toLocaleString()}</td>
+            <td>${ad.clicks.toLocaleString()}</td>
+            <td>${ad.conversions.toLocaleString()}</td>
+            <td><strong>${roas}x</strong></td>
+            <td><code>${acos}%</code></td>
+            <td>${perfBadge}</td>
+            <td>
+              <div style="display:flex; gap:4px;">
+                <button class="p-1 text-slate-500 hover:text-indigo-600" onclick="editAdCampaign(${ad.id})"><i class="fa-solid fa-pencil"></i></button>
+                <button class="p-1 text-rose-500 hover:text-rose-700" onclick="deleteAdCampaign(${ad.id})"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('adsTableBody').innerHTML = rows || '<tr><td colspan="10" style="text-align:center;">No marketing campaigns configured.</td></tr>';
+    }
+
+    function openAddAdCampaignModal() {
+      document.getElementById('adForm').reset();
+      document.getElementById('adEditId').value = '';
+      document.getElementById('adModalTitle').innerText = 'Add Ad Campaign Entry';
+      openModal('adCampaignModal');
+    }
+
+    function editAdCampaign(id) {
+      const ad = appState.ads.find(a => a.id === id);
+      if (!ad) return;
+
+      document.getElementById('adEditId').value = ad.id;
+      document.getElementById('adName').value = ad.name;
+      document.getElementById('adSpend').value = ad.spend;
+      document.getElementById('adSales').value = ad.sales;
+      document.getElementById('adImpressions').value = ad.impressions;
+      document.getElementById('adClicks').value = ad.clicks;
+      document.getElementById('adConversions').value = ad.conversions;
+
+      document.getElementById('adModalTitle').innerText = 'Edit Campaign Metrics';
+      openModal('adCampaignModal');
+    }
+
+    function submitAdForm() {
+      const id = document.getElementById('adEditId').value;
+      const name = document.getElementById('adName').value.trim();
+      const spend = parseFloat(document.getElementById('adSpend').value) || 0;
+      const sales = parseFloat(document.getElementById('adSales').value) || 0;
+      const impressions = parseInt(document.getElementById('adImpressions').value) || 0;
+      const clicks = parseInt(document.getElementById('adClicks').value) || 0;
+      const conversions = parseInt(document.getElementById('adConversions').value) || 0;
+
+      if (!name) return;
+
+      if (id) {
+        const idx = appState.ads.findIndex(a => a.id === parseInt(id));
+        if (idx !== -1) {
+          appState.ads[idx] = { id: parseInt(id), name, spend, sales, impressions, clicks, conversions };
+          pushToast("Campaign metrics saved.", "success");
+        }
+      } else {
+        const newId = appState.ads.length > 0 ? Math.max(...appState.ads.map(a => a.id)) + 1 : 1;
+        appState.ads.push({ id: newId, name, spend, sales, impressions, clicks, conversions });
+        pushToast("New campaign saved.", "success");
+      }
+
+      saveState();
+      closeModal('adCampaignModal');
+      renderAds();
+    }
+
+    function deleteAdCampaign(id) {
+      triggerCustomConfirm("Erase Campaign Record", "Are you sure you want to drop this advertising campaign metrics set?", () => {
+        const idx = appState.ads.findIndex(a => a.id === id);
+        if (idx === -1) return;
+        appState.ads.splice(idx, 1);
+        pushToast("Campaign metrics dropped.", "warning");
+        saveState();
+        renderAds();
+      });
+    }
+
+    // 9. WORKFORCE EMPLOYEES & ATTENDANCE MANAGEMENT
+    function renderEmployeesAndTasks() {
+      const employeeTaskCounts = {};
+      appState.employees.forEach(emp => employeeTaskCounts[emp.name] = { total: 0, pending: 0, done: 0 });
+
+      appState.tasks.forEach(task => {
+        if (employeeTaskCounts[task.assignee]) {
+          employeeTaskCounts[task.assignee].total++;
+          if (task.status === 'Done') {
+            employeeTaskCounts[task.assignee].done++;
+          } else {
+            employeeTaskCounts[task.assignee].pending++;
+          }
+        }
+      });
+
+      // Render employees Cards roster
+      let empCards = '';
+      appState.employees.forEach(emp => {
+        const counts = employeeTaskCounts[emp.name] || { total: 0, pending: 0, done: 0 };
+        empCards += `
+          <div class="card p-3 flex flex-col justify-between border-l-4 border-indigo-600 bg-white dark:bg-slate-800">
+            <div class="flex items-center justify-between">
+              <strong class="text-sm font-bold text-slate-800 dark:text-white">${emp.name}</strong>
+              <span class="text-[10px] bg-indigo-50 text-indigo-600 dark:bg-indigo-950/20 dark:text-indigo-400 px-2 py-0.5 rounded font-semibold">${emp.role}</span>
+            </div>
+            <div style="color: #f1c40f; display:flex; align-items:center; gap:4px; font-weight:600; font-size:11px; margin-top:4px;">
+              <i class="fa-solid fa-star"></i> <span>${emp.rating.toFixed(1)}</span>
+            </div>
+            <div class="flex justify-between text-[11px] text-slate-500 mt-2 border-t pt-1 border-slate-100 dark:border-slate-700">
+              <span>Queue: <strong>${counts.pending}</strong></span>
+              <span>Committed: <strong>${counts.done}</strong></span>
+            </div>
+          </div>
+        `;
+      });
+      document.getElementById('employeesCardGrid').innerHTML = empCards;
+
+      // Populate Attendance employee selection drop menu
+      const select = document.getElementById('attendanceEmployeeSelect');
+      const currentSelection = select.value;
+      select.innerHTML = '';
+      appState.employees.forEach(emp => {
+        select.innerHTML += `<option value="${emp.name}">${emp.name} (${emp.role})</option>`;
+      });
+      if (currentSelection) {
+        select.value = currentSelection;
+      }
+      updateSelectedEmployeeStatus();
+
+      // Render live attendance lists
+      renderAttendanceLogs();
+
+      // Render Central Kanban Board Lanes
+      renderKanbanLanes();
+    }
+
+    function renderAttendanceLogs() {
+      const tbody = document.getElementById('attendanceTableBody');
+      if (!tbody) return;
+      
+      tbody.innerHTML = '';
+      const logs = appState.attendance || [];
+      
+      logs.forEach(log => {
+        let badge = 'badge-gray';
+        if (log.status.includes('Office')) badge = 'badge-green';
+        if (log.status.includes('WFH')) badge = 'badge-blue';
+        if (log.status.includes('Leave')) badge = 'badge-red';
+
+        const actionBadge = log.action === 'Check-Out' ? 'badge-red' : 'badge-green';
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${log.date}</td>
+            <td><strong>${log.name}</strong></td>
+            <td><span class="badge ${actionBadge}">${log.action || 'Check-In'}</span></td>
+            <td><span class="badge ${badge}">${log.status}</span></td>
+            <td><code>${log.time}</code></td>
+          </tr>
+        `;
+      });
+
+      const todayStr = getLocalDateString();
+      const todayCount = logs.filter(l => l.date === todayStr).length;
+      const countEl = document.getElementById('activeAttendanceCount');
+      if (countEl) {
+        countEl.innerText = `${todayCount} logs registered today`;
+      }
+    }
+
+    function logAttendanceEvent(actionType) {
+      const name = document.getElementById('attendanceEmployeeSelect').value;
+      const status = document.getElementById('attendanceStatusSelect').value;
+      const date = getLocalDateString();
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      if (!name) {
+        pushToast("Please select a workforce employee first.", "error");
+        return;
+      }
+
+      if (!appState.attendance) appState.attendance = [];
+
+      // Add as first item in array
+      appState.attendance.unshift({ name, date, action: actionType, status, time });
+
+      saveState();
+      renderEmployeesAndTasks();
+      addLogTrace('ATTENDANCE', `Registered ${actionType} event for ${name} as ${status}.`);
+      pushToast(`Logged ${actionType}: ${name} is ${status}.`, "success");
+    }
+
+    function downloadMonthlyAttendance() {
+      const targetMonth = document.getElementById('attendanceMonthPicker').value; // e.g. "2026-07"
+      if (!targetMonth) {
+        pushToast("Please choose a valid month.", "warning");
+        return;
+      }
+
+      const logs = appState.attendance || [];
+      const monthLogs = logs.filter(l => l.date.startsWith(targetMonth));
+
+      if (monthLogs.length === 0) {
+        pushToast("No attendance logs registered in chosen month.", "warning");
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,Date,Employee Name,Action,Status / Duty Note,Logged Time\n";
+      monthLogs.forEach(log => {
+        csvContent += `"${log.date}","${log.name}","${log.action || 'Check-In'}","${log.status}","${log.time}"\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Monthly_Attendance_Report_${targetMonth}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      pushToast("Monthly attendance CSV exported.", "success");
+    }
+
+    function renderKanbanLanes() {
+      const todoList = document.getElementById('todoTaskList');
+      const inprogressList = document.getElementById('inprogressTaskList');
+      const doneList = document.getElementById('doneTaskList');
+
+      todoList.innerHTML = '';
+      inprogressList.innerHTML = '';
+      doneList.innerHTML = '';
+
+      let todoCount = 0;
+      let inprogressCount = 0;
+      let doneCount = 0;
+
+      appState.tasks.forEach(task => {
+        const taskCardHtml = `
+          <div class="task-card bg-white dark:bg-slate-800 p-3 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm space-y-2">
+            <div class="flex justify-between items-center text-[10px]">
+              <span class="badge ${task.priority === 'High' ? 'badge-red' : task.priority === 'Medium' ? 'badge-yellow' : 'badge-gray'}">${task.priority}</span>
+              <span class="text-slate-400 font-semibold"><i class="fa-regular fa-clock"></i> ${task.dueDate}</span>
+            </div>
+            <div class="font-bold text-xs text-slate-800 dark:text-white leading-snug">${task.title}</div>
+            <div class="flex justify-between items-center text-[11px] text-slate-500 pt-1 border-t border-slate-100 dark:border-slate-700">
+              <span>Agent: <strong>${task.assignee}</strong></span>
+              <span class="font-bold text-slate-700 dark:text-slate-300">${task.progress}%</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-700/50 h-1.5 rounded-full overflow-hidden">
+              <div class="bg-indigo-600 h-full" style="width: ${task.progress}%;"></div>
+            </div>
+            <div class="flex justify-between items-center pt-2">
+              <div class="flex gap-2">
+                <button onclick="editTaskEntry(${task.id})" class="text-slate-400 hover:text-indigo-600"><i class="fa-solid fa-pencil text-xs"></i></button>
+                <button onclick="deleteTaskEntry(${task.id})" class="text-rose-400 hover:text-rose-600"><i class="fa-solid fa-trash text-xs"></i></button>
+              </div>
+              <div class="flex gap-1">
+                ${task.status !== 'To Do' ? `<button onclick="moveTaskLane(${task.id}, 'left')" class="p-1 border rounded bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400"><i class="fa-solid fa-arrow-left text-[10px]"></i></button>` : ''}
+                ${task.status !== 'Done' ? `<button onclick="moveTaskLane(${task.id}, 'right')" class="p-1 border rounded bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400"><i class="fa-solid fa-arrow-right text-[10px]"></i></button>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+
+        if (task.status === 'To Do') {
+          todoList.innerHTML += taskCardHtml;
+          todoCount++;
+        } else if (task.status === 'In Progress') {
+          inprogressList.innerHTML += taskCardHtml;
+          inprogressCount++;
+        } else if (task.status === 'Done') {
+          doneList.innerHTML += taskCardHtml;
+          doneCount++;
+        }
+      });
+
+      document.getElementById('todoTaskCount').innerText = todoCount;
+      document.getElementById('inprogressTaskCount').innerText = inprogressCount;
+      document.getElementById('doneTaskCount').innerText = doneCount;
+    }
+
+    function moveTaskLane(id, direction) {
+      const task = appState.tasks.find(t => t.id === id);
+      if (!task) return;
+
+      const lanes = ['To Do', 'In Progress', 'Done'];
+      const currentIdx = lanes.indexOf(task.status);
+      let targetIdx = currentIdx;
+
+      if (direction === 'left' && currentIdx > 0) {
+        targetIdx = currentIdx - 1;
+      } else if (direction === 'right' && currentIdx < 2) {
+        targetIdx = currentIdx + 1;
+      }
+
+      task.status = lanes[targetIdx];
+      
+      if (task.status === 'To Do') task.progress = 0;
+      if (task.status === 'In Progress' && task.progress === 0) task.progress = 25;
+      if (task.status === 'Done') task.progress = 100;
+
+      pushToast(`Task moved: ${task.status}`, "info");
+      addLogTrace('TASK_MOVE', `Moved task ID ${id} to lane '${task.status}'`);
+      saveState();
+      renderEmployeesAndTasks();
+    }
+
+    function openAddTaskModal() {
+      document.getElementById('taskForm').reset();
+      document.getElementById('taskEditId').value = '';
+      document.getElementById('taskModalTitle').innerText = 'Add Central Task Record';
+      document.getElementById('taskDueDate').value = getLocalDateString();
+
+      // Populate assignees dropdown
+      const select = document.getElementById('taskAssignee');
+      select.innerHTML = '';
+      appState.employees.forEach(e => {
+        select.innerHTML += `<option value="${e.name}">${e.name}</option>`;
+      });
+
+      openModal('taskModal');
+    }
+
+    function editTaskEntry(id) {
+      const task = appState.tasks.find(t => t.id === id);
+      if (!task) return;
+
+      document.getElementById('taskEditId').value = task.id;
+      document.getElementById('taskTitle').value = task.title;
+      
+      const select = document.getElementById('taskAssignee');
+      select.innerHTML = '';
+      appState.employees.forEach(e => {
+        select.innerHTML += `<option value="${e.name}">${e.name}</option>`;
+      });
+
+      document.getElementById('taskAssignee').value = task.assignee;
+      document.getElementById('taskPriority').value = task.priority;
+      document.getElementById('taskDueDate').value = task.dueDate;
+      document.getElementById('taskProgress').value = task.progress;
+      document.getElementById('taskStatus').value = task.status;
+
+      document.getElementById('taskModalTitle').innerText = 'Modify Task Parameters';
+      openModal('taskModal');
+    }
+
+    function submitTaskForm() {
+      const id = document.getElementById('taskEditId').value;
+      const title = document.getElementById('taskTitle').value.trim();
+      const assignee = document.getElementById('taskAssignee').value;
+      const priority = document.getElementById('taskPriority').value;
+      const dueDate = document.getElementById('taskDueDate').value;
+      const progress = parseInt(document.getElementById('taskProgress').value) || 0;
+      const status = document.getElementById('taskStatus').value;
+
+      if (!title) return;
+
+      if (id) {
+        const idx = appState.tasks.findIndex(t => t.id === parseInt(id));
+        if (idx !== -1) {
+          appState.tasks[idx] = { id: parseInt(id), title, assignee, priority, dueDate, progress, status };
+          pushToast("Task modifications saved.", "success");
+        }
+      } else {
+        const newId = appState.tasks.length > 0 ? Math.max(...appState.tasks.map(t => t.id)) + 1 : 1;
+        appState.tasks.push({ id: newId, title, assignee, priority, dueDate, progress, status });
+        pushToast("New task assigned.", "success");
+      }
+
+      saveState();
+      closeModal('taskModal');
+      renderEmployeesAndTasks();
+    }
+
+    function deleteTaskEntry(id) {
+      triggerCustomConfirm("Erase Task", "Are you sure you want to drop selected task?", () => {
+        const idx = appState.tasks.findIndex(t => t.id === id);
+        if (idx === -1) return;
+        appState.tasks.splice(idx, 1);
+        pushToast("Task dropped.", "warning");
+        saveState();
+        renderEmployeesAndTasks();
+      });
+    }
+
+    // 10. TIME LOG HISTORY VIEW
+    function renderHistory() {
+      let rows = '';
+      appState.history.forEach(log => {
+        rows += `
+          <tr>
+            <td><code style="font-weight:600;">${new Date(log.timestamp).toLocaleString()}</code></td>
+            <td><strong>${log.user}</strong></td>
+            <td><span class="badge badge-blue">${log.action}</span></td>
+            <td>${log.details}</td>
+            <td><code>${log.ip}</code></td>
+            <td>${log.location}</td>
+          </tr>
+        `;
+      });
+      document.getElementById('historyTableBody').innerHTML = rows || '<tr><td colspan="6" style="text-align:center;">History logs buffer is clean.</td></tr>';
+    }
+
+    function triggerPurgeAuditLogs() {
+      triggerCustomConfirm("Purge Audit Logs", "Are you sure you want to completely erase audit logs?", () => {
+        appState.history = [
+          { timestamp: new Date().toISOString(), user: 'SYSTEM', action: 'CLEAR', details: 'Purged historical trace log buffers.', ip: ipAddress, location: physicalLocation }
+        ];
+        saveState();
+        renderHistory();
+        pushToast("Audit traces flushed.", "success");
+      });
+    }
+
+    // 11. CENTRAL RESOURCES DIRECTORY
+    function renderResources() {
+      let gridHtml = '';
+      appState.resources.forEach(res => {
+        const logo = res.logoUrl || `https://logo.clearbit.com/${new URL(res.url).hostname}`;
+        gridHtml += `
+          <div class="card p-4 flex flex-col items-center text-center gap-2 card-hover bg-white dark:bg-slate-800">
+            <img class="w-12 h-12 rounded-full border bg-white object-contain" src="${logo}" alt="Logo" onerror="this.src='https://placehold.co/48x48/1a5276/ffffff?text=Hub'">
+            <strong class="text-sm font-bold text-slate-800 dark:text-white">${res.name}</strong>
+            <p class="text-[11px] text-slate-500 overflow-hidden w-full text-ellipsis whitespace-nowrap">${res.url}</p>
+            <div class="flex gap-2 mt-3 w-full justify-center">
+              <a href="${res.url}" target="_blank" class="px-2 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold rounded shadow transition"><i class="fa-solid fa-up-right-from-square"></i> Open</a>
+              <button onclick="editResourceEntry(${res.id})" class="p-1 text-slate-400 hover:text-indigo-600"><i class="fa-solid fa-pencil text-xs"></i></button>
+              <button onclick="deleteResourceEntry(${res.id})" class="p-1 text-rose-400 hover:text-rose-600"><i class="fa-solid fa-trash text-xs"></i></button>
+            </div>
+          </div>
+        `;
+      });
+      document.getElementById('resourcesGrid').innerHTML = gridHtml;
+    }
+
+    function openAddResourceModal() {
+      document.getElementById('resourceForm').reset();
+      document.getElementById('resourceEditId').value = '';
+      document.getElementById('resourceModalTitle').innerText = 'Add Enterprise Directory Link';
+      openModal('resourceModal');
+    }
+
+    function editResourceEntry(id) {
+      const res = appState.resources.find(r => r.id === id);
+      if (!res) return;
+
+      document.getElementById('resourceEditId').value = res.id;
+      document.getElementById('resourceName').value = res.name;
+      document.getElementById('resourceUrl').value = res.url;
+      document.getElementById('resourceLogoUrl').value = res.logoUrl || '';
+
+      document.getElementById('resourceModalTitle').innerText = 'Edit Enterprise Directory Link';
+      openModal('resourceModal');
+    }
+
+    function submitResourceForm() {
+      const id = document.getElementById('resourceEditId').value;
+      const name = document.getElementById('resourceName').value.trim();
+      const url = document.getElementById('resourceUrl').value.trim();
+      const logoUrl = document.getElementById('resourceLogoUrl').value.trim();
+
+      if (!name || !url) return;
+
+      if (id) {
+        const idx = appState.resources.findIndex(r => r.id === parseInt(id));
+        if (idx !== -1) {
+          appState.resources[idx] = { id: parseInt(id), name, url, logoUrl };
+          pushToast("Resource shortcut modified.", "success");
+        }
+      } else {
+        const newId = appState.resources.length > 0 ? Math.max(...appState.resources.map(r => r.id)) + 1 : 1;
+        appState.resources.push({ id: newId, name, url, logoUrl });
+        pushToast("Resource shortcut saved.", "success");
+      }
+
+      saveState();
+      closeModal('resourceModal');
+      renderResources();
+    }
+
+    // 12. ACCESS CONTROL WORKSPACE (REDOCUMENTED SIMULATION ROLE CONFIGURATOR, NO PASSWORDS RETRIEVED)
+    function renderAccessControl() {
+      // Set roles selector menu
+      const select = document.getElementById('configTargetPersona');
+      loadPersonaPermissionsToInputs(select.value);
+
+      // Render configuration summaries
+      let rows = '';
+      Object.keys(appState.personaConfigs).forEach(persona => {
+        const tabsStr = appState.personaConfigs[persona].join(', ');
+        rows += `
+          <tr>
+            <td><strong>${persona}</strong></td>
+            <td><span class="text-xs text-slate-500">${PREDEFINED_ROLES[persona] || 'Staff'}</span></td>
+            <td style="max-width:350px; overflow:hidden; text-overflow:ellipsis; white-space:normal;" class="text-xs font-semibold" title="${tabsStr}">
+              ${tabsStr}
+            </td>
+          </tr>
+        `;
+      });
+      document.getElementById('accessTableBody').innerHTML = rows;
+    }
+
+    function loadPersonaPermissionsToInputs(personaName) {
+      const allowed = appState.personaConfigs[personaName] || [];
+      const checklistContainer = document.getElementById('allowedTabsChecklist');
+      checklistContainer.innerHTML = '';
+      
+      STANDARD_TABS.forEach(tab => {
+        if (tab.id === 'access' && personaName !== 'Admin') return; // Non-admin cannot customize Access configurations
+        
+        const isChecked = allowed.includes(tab.id) ? 'checked' : '';
+        checklistContainer.innerHTML += `
+          <label class="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300 font-semibold cursor-pointer">
+            <input type="checkbox" value="${tab.id}" ${isChecked}>
+            <span>${tab.name}</span>
+          </label>
+        `;
+      });
+    }
+
+    function submitPersonaPermissionConfiguration() {
+      const persona = document.getElementById('configTargetPersona').value;
+      const checkedTabs = [];
+      document.querySelectorAll('#allowedTabsChecklist input:checked').forEach(cb => checkedTabs.push(cb.value));
+
+      if (persona === 'Admin' && !checkedTabs.includes('access')) {
+        // Enforce admin permission visibility of Access tab to avoid locking out the configuration interface
+        checkedTabs.push('access');
+      }
+
+      appState.personaConfigs[persona] = checkedTabs;
+      saveState();
+      renderAccessControl();
+      
+      pushToast(`Permissions updated for simulated persona ${persona}.`, "success");
+      addLogTrace('SIMULATED_ROLE_MAP', `Updated visible tab scope configurations for persona role: ${persona}`);
+      
+      // Auto-refresh layout permissions if we modified the active persona
+      if (appState.activePersona === persona) {
+        launchSystemWorkspace();
+      }
+    }
+
+    function deleteResourceEntry(id) {
+      triggerCustomConfirm("Erase Resource Link", "Are you sure you want to delete this resource link shortcut?", () => {
+        const idx = appState.resources.findIndex(r => r.id === id);
+        if (idx === -1) return;
+        appState.resources.splice(idx, 1);
+        pushToast("Link removed.", "warning");
+        saveState();
+        renderResources();
+      });
+    }
+
+    // GLOBAL SYSTEM FILTERS COMPONENT
+    function isRecordInFilters(recDate, recBrand, recMarketplace) {
+      if (recDate) {
+        if (activeFilters.startDate && recDate < activeFilters.startDate) return false;
+        if (activeFilters.endDate && recDate > activeFilters.endDate) return false;
+      }
+      if (recBrand && !activeFilters.brands.includes(recBrand)) return false;
+      if (recMarketplace && !activeFilters.marketplaces.includes(recMarketplace)) return false;
+      return true;
+    }
+
+    function toggleFilterPanel(open) {
+      const panel = document.getElementById('filterPanel');
+      if (open) {
+        // Set date inputs values
+        document.getElementById('filterStartDate').value = activeFilters.startDate;
+        document.getElementById('filterEndDate').value = activeFilters.endDate;
+
+        // Render dynamic segment checklist
+        const brandsGroup = document.getElementById('filterBrandList');
+        brandsGroup.innerHTML = '';
+        ['WA', 'BM(RRP)', 'RBN(PB)', 'WW', 'NS', 'RO'].forEach(b => {
+          brandsGroup.innerHTML += `
+            <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold">
+              <input type="checkbox" value="${b}" ${activeFilters.brands.includes(b) ? 'checked' : ''}>
+              <span>${b}</span>
+            </label>
+          `;
+        });
+
+        const marketplacesGroup = document.getElementById('filterMarketplaceList');
+        marketplacesGroup.innerHTML = '';
+        ['Amazon', 'Etsy', 'Walmart', 'eBay'].forEach(m => {
+          marketplacesGroup.innerHTML += `
+            <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold">
+              <input type="checkbox" value="${m}" ${activeFilters.marketplaces.includes(m) ? 'checked' : ''}>
+              <span>${m}</span>
+            </label>
+          `;
+        });
+
+        panel.classList.add('open');
+      } else {
+        panel.classList.remove('open');
+      }
+    }
+
+    function applyFilters() {
+      activeFilters.startDate = document.getElementById('filterStartDate').value;
+      activeFilters.endDate = document.getElementById('filterEndDate').value;
+
+      const checkedBrands = [];
+      document.querySelectorAll('#filterBrandList input:checked').forEach(cb => checkedBrands.push(cb.value));
+      activeFilters.brands = checkedBrands;
+
+      const checkedMarketplaces = [];
+      document.querySelectorAll('#filterMarketplaceList input:checked').forEach(cb => checkedMarketplaces.push(cb.value));
+      activeFilters.marketplaces = checkedMarketplaces;
+
+      toggleFilterPanel(false);
+
+      // Re-trigger current viewport render
+      const activeBtn = document.querySelector('#tabsNavBar button.text-indigo-600');
+      if (activeBtn) {
+        const tabId = activeBtn.id.replace('tab-btn-', '');
+        renderSheetViewport(tabId);
+      }
+      pushToast("Data filters applied successfully.", "success");
+      addLogTrace('FILTER_APPLY', `Filters modified.`);
+    }
+
+    function resetFilters() {
+      activeFilters = {
+        startDate: '',
+        endDate: '',
+        brands: ['WA', 'BM(RRP)', 'RBN(PB)', 'WW', 'NS', 'RO'],
+        marketplaces: ['Amazon', 'Etsy', 'Walmart', 'eBay']
+      };
+      toggleFilterPanel(false);
+      const activeBtn = document.querySelector('#tabsNavBar button.text-indigo-600');
+      if (activeBtn) {
+        const tabId = activeBtn.id.replace('tab-btn-', '');
+        renderSheetViewport(tabId);
+      }
+      pushToast("Global filters restored.", "info");
+    }
+
+    // SYSTEM THEME CONTROLLER
+    function toggleDarkMode() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const target = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', target);
+      localStorage.setItem(THEME_KEY, target);
+      updateThemeIcon(target);
+      pushToast(`Switched to ${target} mode.`, "info");
+    }
+
+    function updateThemeIcon(theme) {
+      const icon = document.getElementById('themeIcon');
+      if (theme === 'dark') {
+        icon.className = 'fa-solid fa-sun';
+      } else {
+        icon.className = 'fa-solid fa-moon';
+      }
+    }
+
+    // STATUS RE-ROUTER CORRESPONDENCE HELPER
+    function getStatusBadge(status) {
+      status = status.trim().toLowerCase();
+      if (['resolved', 'delivered', 'great', 'done'].includes(status)) {
+        return `<span class="badge badge-green"><i class="fa-solid fa-circle-check"></i> ${status}</span>`;
+      }
+      if (['follow-up', 'in process', 'low conv'].includes(status)) {
+        return `<span class="badge badge-yellow"><i class="fa-solid fa-circle-notch fa-spin"></i> ${status}</span>`;
+      }
+      if (['canceled', 'high acos', 'high'].includes(status)) {
+        return `<span class="badge badge-red"><i class="fa-solid fa-circle-xmark"></i> ${status}</span>`;
+      }
+      if (['hand over', 'received', 'return received', 'refund processed', 'shipment created'].includes(status)) {
+        return `<span class="badge badge-blue"><i class="fa-solid fa-truck"></i> ${status}</span>`;
+      }
+      return `<span class="badge badge-gray"><i class="fa-solid fa-circle-question"></i> ${status}</span>`;
+    }
+
+    // TOAST ALERTS QUEUES TRIGGER
+    function pushToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast bg-white dark:bg-slate-800 p-4 rounded-lg border-l-4 shadow-lg text-slate-800 dark:text-white flex items-center justify-between min-w-[280px] max-w-sm transition duration-300 transform translate-x-0 ${
+        type === 'success' ? 'border-l-emerald-500' : type === 'warning' ? 'border-l-amber-500' : type === 'error' ? 'border-l-rose-500' : 'border-l-blue-500'
+      }`;
+      
+      let icon = '<i class="fa-solid fa-circle-check text-emerald-500"></i>';
+      if (type === 'warning') icon = '<i class="fa-solid fa-circle-exclamation text-amber-500"></i>';
+      if (type === 'error') icon = '<i class="fa-solid fa-circle-xmark text-rose-500"></i>';
+      if (type === 'info') icon = '<i class="fa-solid fa-circle-info text-blue-500"></i>';
+
+      toast.innerHTML = `
+        <div class="flex items-center gap-3">
+          ${icon}
+          <span class="text-xs font-bold">${message}</span>
+        </div>
+        <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 ml-4"><i class="fa-solid fa-xmark"></i></button>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.add('open');
+    }
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('open');
+    }
+  </script>
+</body>
+</html>
