@@ -405,5 +405,17 @@
     .badge-blue { background: #dbeafe; color: #1e40af; }
     .tab-content.hidden { display: none; }
   </style>
+  <!-- ===== FORCE HIDE LOADING OVERLAY ===== -->
+<script>
+  // Force hide the loading overlay after 2 seconds, regardless of other errors.
+  setTimeout(function() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+      overlay.style.display = 'none'; // hide completely
+      overlay.classList.add('hidden');
+    }
+  }, 2000);
+</script>
 </body>
+  
 </html>
