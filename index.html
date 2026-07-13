@@ -15,7 +15,7 @@
 
   <script>
     // ============================================================
-    //  YOUR FIREBASE CONFIG (copied from your screenshot)
+    //  YOUR FIREBASE CONFIG
     // ============================================================
     const firebaseConfig = {
       apiKey: "AIzaSyBIl_Xo_hnBhckvmd4AuxBDdyXC47SEDSU",
@@ -27,7 +27,7 @@
       measurementId: "G-7K39EBQ6ZH"
     };
 
-    // Initialise Firebase (with error handling)
+    // Initialise Firebase
     let db = null;
     try {
       firebase.initializeApp(firebaseConfig);
@@ -38,7 +38,7 @@
     }
 
     // ============================================================
-    //  DEFAULT SAMPLE DATA (so dashboard shows immediately)
+    //  DEFAULT SAMPLE DATA
     // ============================================================
     const DEFAULT_ORDERS = [
       { id: 1, date: '2026-07-13', brand: 'RBN(PB)', marketplace: 'Amazon', design: 'CECIL GREEN', size: '9X12', sku: 'CEC-GRE-9X12-001', qty: 1, sales: 590, status: 'Delivered', carrier: 'UPS', tracking: '1Z999AA10123456784', remarks: 'Priority packaging' },
@@ -56,53 +56,68 @@
     let appState = {
       orders: [...DEFAULT_ORDERS],
       inventory: [...DEFAULT_INVENTORY],
-      // you can add other collections later
     };
 
     // ============================================================
-    //  FIRESTORE SYNC FUNCTIONS (background)
+    //  FIRESTORE SYNC FUNCTIONS (fixed)
     // ============================================================
     async function loadFromFirestore() {
-      if (!db) return;
+      if (!db) {
+        console.warn('⚠️ No Firebase instance – using defaults.');
+        renderAll();
+        return;
+      }
+
       try {
-        // Try to load orders
+        // Load orders – overwrite appState.orders with Firestore data
         const ordersDoc = await db.collection('orders').doc('master').get();
         if (ordersDoc.exists) {
           const data = ordersDoc.data().data || [];
-          if (data.length) appState.orders = data;
-          console.log('📦 Orders loaded from Firestore.');
+          // ALWAYS overwrite with what's in Firestore (even if empty)
+          appState.orders = data.length ? data : [...DEFAULT_ORDERS];
+          console.log('📦 Orders loaded from Firestore:', appState.orders.length);
         } else {
-          // First time – seed Firestore with default data
-          await db.collection('orders').doc('master').set({ data: DEFAULT_ORDERS });
+          // No doc yet – seed with defaults
+          appState.orders = [...DEFAULT_ORDERS];
+          await db.collection('orders').doc('master').set({ data: appState.orders });
           console.log('📦 Seeded Firestore with default orders.');
         }
 
-        // Load inventory
+        // Load inventory – same logic
         const invDoc = await db.collection('inventory').doc('master').get();
         if (invDoc.exists) {
           const data = invDoc.data().data || [];
-          if (data.length) appState.inventory = data;
-          console.log('📦 Inventory loaded from Firestore.');
+          appState.inventory = data.length ? data : [...DEFAULT_INVENTORY];
+          console.log('📦 Inventory loaded from Firestore:', appState.inventory.length);
         } else {
-          await db.collection('inventory').doc('master').set({ data: DEFAULT_INVENTORY });
+          appState.inventory = [...DEFAULT_INVENTORY];
+          await db.collection('inventory').doc('master').set({ data: appState.inventory });
           console.log('📦 Seeded Firestore with default inventory.');
         }
 
-        // Re‑render everything with fresh data
         renderAll();
+        pushToast('Data synced from cloud.', 'success');
       } catch (err) {
-        console.warn('⚠️ Firestore sync failed – using default data.', err);
-        // Still render with default data (already set)
+        console.error('❌ Firestore load error:', err);
+        // Keep default data (already set)
         renderAll();
+        pushToast('Could not load from cloud – using local data.', 'error');
       }
     }
 
     async function saveOrdersToFirestore() {
-      if (!db) return;
+      if (!db) {
+        console.warn('⚠️ No Firebase instance – cannot save.');
+        return;
+      }
       try {
         await db.collection('orders').doc('master').set({ data: appState.orders });
-        console.log('✅ Orders saved to Firestore.');
-      } catch (e) { console.warn('⚠️ Could not save orders:', e); }
+        console.log('✅ Orders saved to Firestore. Count:', appState.orders.length);
+        pushToast('Order saved to cloud.', 'success');
+      } catch (e) {
+        console.error('❌ Save order error:', e);
+        pushToast('Failed to save order: ' + e.message, 'error');
+      }
     }
 
     async function saveInventoryToFirestore() {
@@ -110,17 +125,18 @@
       try {
         await db.collection('inventory').doc('master').set({ data: appState.inventory });
         console.log('✅ Inventory saved to Firestore.');
-      } catch (e) { console.warn('⚠️ Could not save inventory:', e); }
+      } catch (e) {
+        console.error('❌ Save inventory error:', e);
+      }
     }
 
     // ============================================================
-    //  RENDER FUNCTIONS (simple, clean)
+    //  RENDER FUNCTIONS (unchanged)
     // ============================================================
     function renderAll() {
       renderDashboard();
       renderOrders();
       renderInventory();
-      // (add more as needed)
     }
 
     function renderDashboard() {
@@ -135,7 +151,6 @@
         <div class="card p-4"><div class="text-xs uppercase text-slate-400">Pending</div><div class="text-2xl font-bold">${pending}</div></div>
       `;
 
-      // Brand performance
       const brandStats = {};
       orders.forEach(o => {
         if (!brandStats[o.brand]) brandStats[o.brand] = { orders: 0, revenue: 0 };
@@ -184,7 +199,7 @@
     }
 
     // ============================================================
-    //  UI HELPERS (theme, navigation, etc.)
+    //  UI HELPERS
     // ============================================================
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -265,33 +280,34 @@
     }
 
     // ============================================================
-    //  INIT – LOAD AND HIDE OVERLAY
+    //  MANUAL REFRESH (new)
+    // ============================================================
+    function refreshData() {
+      pushToast('Refreshing from cloud…', 'info');
+      loadFromFirestore();
+    }
+
+    // ============================================================
+    //  INIT
     // ============================================================
     window.addEventListener('DOMContentLoaded', function() {
-      // Hide the loading overlay after 2 seconds (or immediately after rendering)
-      // First render with defaults
+      // Render with defaults first
       renderAll();
 
-      // Then try to load from Firestore in background
-      loadFromFirestore().then(() => {
-        // Re-render with fresh data
-        renderAll();
-        pushToast('Dashboard synced with Firestore.', 'success');
-      }).catch(() => {
-        pushToast('Using local data – Firestore unavailable.', 'error');
-      });
+      // Load from Firestore (overwrites defaults if data exists)
+      loadFromFirestore();
 
-      // Force hide overlay after 2 seconds
+      // Force hide overlay after 2s
       setTimeout(() => {
         document.getElementById('loadingOverlay').classList.add('hidden');
       }, 2000);
 
-      // Set theme
+      // Theme
       const saved = localStorage.getItem('theme') || 'light';
       document.documentElement.setAttribute('data-theme', saved);
       document.getElementById('themeIcon').className = saved === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
 
-      // Set date
+      // Date
       document.getElementById('systemDate').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
       // Default tab
@@ -300,7 +316,26 @@
   </script>
 
   <style>
-    /* Your existing styles – I've included them above */
+    /* Your existing styles – kept intact */
+    :root {
+      --card: #ffffff;
+      --border: #d5d8dc;
+    }
+    [data-theme="dark"] {
+      --card: #1e293b;
+      --border: #334155;
+    }
+    .card { background-color: var(--card); border-radius: 10px; border: 1px solid var(--border); padding: 16px; }
+    .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); background-color: var(--card); }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: rgba(0,0,0,0.04); padding: 10px 12px; border-bottom: 2px solid var(--border); font-weight: 700; }
+    td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-yellow { background: #fef9c3; color: #854d0e; }
+    .badge-red { background: #fee2e2; color: #991b1b; }
+    .badge-blue { background: #dbeafe; color: #1e40af; }
+    .tab-content.hidden { display: none; }
   </style>
 </head>
 <body>
@@ -310,9 +345,7 @@
     <p style="font-weight:600; font-size:14px; color:#2c3e50;">Loading your dashboard…</p>
     <p style="font-size:12px; color:#5d6d7e; margin-top:4px;">Connecting to Firestore</p>
   </div>
-  <style>
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
+  <style> @keyframes spin { to { transform: rotate(360deg); } } </style>
 
   <!-- TOAST CONTAINER -->
   <div id="toastContainer" style="position:fixed; bottom:20px; right:20px; z-index:1000; display:flex; flex-direction:column; gap:10px;"></div>
@@ -328,6 +361,7 @@
       </div>
       <div class="flex items-center gap-4">
         <span id="systemDate" class="text-sm font-medium text-slate-500 dark:text-slate-400 hidden lg:inline">Loading...</span>
+        <button onclick="refreshData()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition"><i class="fa-solid fa-rotate mr-1"></i> Refresh</button>
         <button onclick="toggleDarkMode()" class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition"><i id="themeIcon" class="fa-solid fa-moon"></i></button>
       </div>
     </header>
@@ -391,31 +425,15 @@
     </main>
   </div>
 
-  <!-- Include styles that are not covered -->
-  <style>
-    .card { background-color: var(--card, #ffffff); border-radius: 10px; border: 1px solid var(--border, #d5d8dc); padding: 16px; }
-    .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border, #d5d8dc); background-color: var(--card, #ffffff); }
-    table { width: 100%; border-collapse: collapse; }
-    th { background: rgba(0,0,0,0.04); padding: 10px 12px; border-bottom: 2px solid var(--border, #d5d8dc); font-weight: 700; }
-    td { padding: 8px 12px; border-bottom: 1px solid var(--border, #d5d8dc); }
-    .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
-    .badge-green { background: #dcfce7; color: #166534; }
-    .badge-yellow { background: #fef9c3; color: #854d0e; }
-    .badge-red { background: #fee2e2; color: #991b1b; }
-    .badge-blue { background: #dbeafe; color: #1e40af; }
-    .tab-content.hidden { display: none; }
-  </style>
-  <!-- ===== FORCE HIDE LOADING OVERLAY ===== -->
-<script>
-  // Force hide the loading overlay after 2 seconds, regardless of other errors.
-  setTimeout(function() {
-    const overlay = document.getElementById('loadingOverlay');
-    if (overlay) {
-      overlay.style.display = 'none'; // hide completely
-      overlay.classList.add('hidden');
-    }
-  }, 2000);
-</script>
+  <!-- FORCE HIDE OVERLAY AFTER 2 SECONDS -->
+  <script>
+    setTimeout(function() {
+      const overlay = document.getElementById('loadingOverlay');
+      if (overlay) {
+        overlay.style.display = 'none';
+        overlay.classList.add('hidden');
+      }
+    }, 2000);
+  </script>
 </body>
-  
 </html>
