@@ -1,7 +1,5 @@
-function showTime() {
-	document.getElementById('currentTime').innerHTML = new Date().toUTCString();
+async function submitOrderForm() {
+  // ... modify appState.orders
+  await saveOrders();   // new Firebase save
+  renderOrders();
 }
-showTime();
-setInterval(function () {
-	showTime();
-}, 1000);
